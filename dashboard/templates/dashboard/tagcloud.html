@@ -1,0 +1,59 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+<style media="screen">
+  .porcentaje_texto {
+    color: #fff!important;
+    font-size: 20px!important;
+  }
+</style>
+{% endblock %}
+
+{% block main %}
+<div class="contentpanel">
+  <ol class="breadcrumb breadcrumb-quirk">
+    <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
+    <li class="active">Análisis de Coyuntura</li>
+  </ol>
+  <div class="row">
+    <div class="row panel-statistics">
+      <div class="col-sm-12">
+        <div class="panel panel-updates">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-12">
+                <div id='wordcloud'></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static "dashboard/lib/d3/d3.js" %}"></script>
+<script src="{% static "dashboard/lib/d3/d3.layout.cloud.js" %}"></script>
+<script src="{% static "dashboard/lib/d3/d3.wordcloud.js" %}"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $.get('/hashtags?offset=0&limit=0', function(data){
+      var words = [];
+      data.forEach(function(hashtag){
+        words.push({text: hashtag.hashtag, size: hashtag.count});
+      });
+      d3.wordcloud()
+        .size([1000, 600])
+        .fill(d3.scale.ordinal().range(["#884400", "#448800", "#888800", "#444400"]))
+        .words(words)
+        .onwordclick(function(d, i) {
+          if (d.href) { window.location = d.href; }
+        })
+        .start();
+    });
+  });
+</script>
+{% endblock %}

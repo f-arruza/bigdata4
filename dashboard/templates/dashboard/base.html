@@ -1,0 +1,84 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Dashboard - Taller 4 - Bigdata</title>
+
+  <link rel="stylesheet" href="{% static "dashboard/lib/Hover/hover.css" %}">
+  <link rel="stylesheet" href="{% static "dashboard/lib/fontawesome/css/font-awesome.css" %}">
+  <link rel="stylesheet" href="{% static "dashboard/lib/weather-icons/css/weather-icons.css" %}">
+  <link rel="stylesheet" href="{% static "dashboard/lib/ionicons/css/ionicons.css" %}">
+  <link rel="stylesheet" href="{% static "dashboard/css/quirk.css" %}">
+  <script src="{% static "dashboard/lib/modernizr/modernizr.js" %}"></script>
+
+  {% block css %}
+  {% endblock %}
+</head>
+
+<body>
+
+<header>
+  <div class="headerpanel">
+
+    <div class="logopanel">
+      <h2><a href="{% url 'index' %}">Taller 4</a></h2>
+    </div><!-- logopanel -->
+
+    <div class="headerbar">
+
+      <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
+
+    </div><!-- headerbar -->
+  </div><!-- header-->
+</header>
+
+<section>
+
+  <div class="leftpanel">
+    <div class="leftpanelinner">
+
+      <div class="tab-content">
+
+        <!-- ################# MAIN MENU ################### -->
+
+        <div class="tab-pane active" id="mainmenu">
+          <ul class="nav nav-pills nav-stacked nav-quirk">
+            <li class="active"><a href="{% url 'index' %} "><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
+            <li class="active"><a href="{% url 'polarities-view' %} "><i class="icon ion-ios-pulse-strong"></i> <span>Análisis de Polaridades</span></a></li>
+            <li class="active"><a href="{% url 'accounts-view' %} "><i class="icon ion-person-stalker"></i> <span>Cuentas Involucradas</span></a></li>
+            <li class="active"><a href="{% url 'hashtags-view' %} "><i class="icon icon ion-pound"></i> <span>Listado de Hashtags</span></a></li>
+            <li class="active"><a href="{% url 'locations-view' %} "><i class="icon icon ion-ios-location"></i> <span>Listado de Ubicaciones</span></a></li>
+            <li class="active"><a href="{% url 'quotes-view' %} "><i class="icon icon ion-at"></i> <span>Listado de Citas</span></a></li>
+            <li class="active"><a href="{% url 'tweets-view' %} "><i class="icon icon ion-social-twitter"></i> <span>Listado Completo de Tweets</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mainpanel">
+
+    {% block main %}
+    {% endblock %}
+
+  </div>
+
+</section>
+
+<script src="{% static "dashboard/lib/jquery/jquery.js" %}"></script>
+<script src="{% static "dashboard/lib/jquery-ui/jquery-ui.js" %}"></script>
+<script src="{% static "dashboard/lib/bootstrap/js/bootstrap.js" %}"></script>
+<script src="{% static "dashboard/lib/jquery-toggles/toggles.js" %}"></script>
+<script src="{% static "dashboard/lib/jquery-knob/jquery.knob.js" %}"></script>
+<script src="{% static "dashboard/js/quirk.js" %}"></script>
+<script src="{% static "dashboard/js/dashboard.js" %}"></script>
+
+{% block js %}
+{% endblock %}
+
+</body>
+</html>

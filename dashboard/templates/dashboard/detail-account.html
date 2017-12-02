@@ -1,0 +1,120 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" %}">
+{% endblock %}
+
+{% block main %}
+<div class="contentpanel">
+
+  <ol class="breadcrumb breadcrumb-quirk">
+    <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
+    <li><a href="{% url 'main-accounts-view'%}"><i class="fa fa-home mr5"></i> Cuentas Principales</a></li>
+    <li class="active">Detalle de Cuenta</li>
+  </ol>
+  <div class="panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">Detalle de perfil</h4>
+      <p>Este es el detalle de perfil para:</p>
+    </div>
+    <div class="panel-body">
+      <div id="donut-summary" class="body-chart"></div>
+      <div class="col-md-12 col-lg-12 dash-right">
+        <div class="row">
+          <ul class="col-sm-4" id="perfil">
+            <li class='media col-sm-12'>
+              <div class='media-left'>
+                <a href='#'>
+                  <img class='media-object img-circle' src='{{user.image}}' alt=''>
+                </a>
+              </div>
+              <div class='media-body'>
+                <h4 class='media-heading nomargin'><a target='_blank' href='https://twitter.com/" + user.username + "'>{{user.name}}</a></h4>
+                <input type="hidden" id="username" value="{{user.username}}">
+                <p>{{user.description}}</p>
+                <span><strong>Score de Polaridad: </strong>{{user_details.polarity_score}}</span><br>
+                <span><strong>Tipo: </strong>{{user_details.type}}</span><br>
+                <span><strong>Ubicación: </strong>{{user.location}}</span><br>
+                <span>{{user.tweets_count}}</span> Tweets publicados<br>
+                <span>{{user.rtweets_count}}</span> RT hechos<br><br>
+                <span><strong>Temas principales</strong></span><br>
+                <ul>
+                  {% for tema in user_details.topics %}
+                    <li><strong>{{tema.topic}}: </strong>{{tema.count}} tweets</li>
+                  {% endfor %}
+                </ul><br>
+                <span><strong>Polaridad de sus tweets</strong></span><br>
+                <ul>
+                  {% for polarity in user_details.polarities %}
+                    <li>Tweets con polaridad <strong>{{polarity.polarity}}:</strong> {{polarity.count}}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </li>
+          </ul>
+          <div id="line-chart" class="col-sm-8 body-chart" style="height: 500px"></div>
+        </div><br/>
+        <div class="row">
+          <table id="dataTable1" class="table table-bordered table-striped-col">
+            <thead>
+              <tr>
+                <th>Usuario </th>
+                <th>Promedio de Apoyo</th>
+              </tr>
+            </thead>
+
+            <tfoot>
+              <tr>
+                <th>Usuario </th>
+                <th>Promedio de Apoyo</th>
+              </tr>
+            </tfoot>
+            <tbody>
+              {% for user in support %}
+              <tr>
+                <td>@{{user.account}}</td>
+                <td>{{user.support_score}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static "dashboard/lib/datatables/jquery.dataTables.js" %}"></script>
+<script src="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.js" %}"></script>
+<script src="{% static "dashboard/lib/morrisjs/morris.js" %}"></script>
+<script src="{% static "dashboard/lib/raphael/raphael.js" %}"></script>
+<script>
+$(document).ready(function() {
+  'use strict';
+  $('#dataTable1').DataTable({"order": [[ 1, "desc" ]]});
+  $.get('/followers/?username='+$("#username").val(), function(followers){
+    var count = 1;
+    var data_chart = [];
+    followers.forEach(function(data){
+      data_chart.push({y: count, a: data.count});
+      count++;
+    });
+    var m1 = new Morris.Line({
+     element: 'line-chart',
+     data: data_chart,
+     xkey: 'y',
+     ykeys: ['a'],
+     labels: ['Cantidad de Seguidores'],
+     lineColors: ['#D9534F'],
+     lineWidth: '3px',
+     resize: true,
+     ymin: data_chart[0].a,
+     hideHover: true
+   });
+  });
+});
+</script>
+{% endblock %}

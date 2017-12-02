@@ -1,0 +1,208 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+<style media="screen">
+  .porcentaje_texto {
+    color: #fff!important;
+    font-size: 20px!important;
+  }
+</style>
+{% endblock %}
+
+{% block main %}
+<div class="contentpanel">
+  <ol class="breadcrumb breadcrumb-quirk">
+    <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
+    <li class="active">Análisis de Polaridades</li>
+  </ol>
+  <div class="row">
+    <div class="row panel-statistics">
+      <div class="col-sm-6">
+        <div class="panel panel-primary-full panel-updates">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-7 col-lg-8">
+                <h4 class="panel-title text-success">Tweets con polaridad positiva</h4>
+                <h3 id="porcentaje_positivo"></h3>
+                <div class="progress">
+                  <div id="porcentaje_positivo_barra" style="width: 00%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="00" role="progressbar" class="progress-bar progress-bar-success">
+                  </div>
+                </div>
+                <p id="porcentaje_positivo_texto" class="porcentaje_texto"></p>
+              </div>
+              <div class="col-xs-5 col-lg-4 text-right" id="porcentaje_positivo_grafica">
+              </div>
+            </div>
+          </div>
+        </div><!-- panel -->
+      </div><!-- col-sm-6 -->
+
+      <div class="col-sm-6">
+        <div class="panel panel-info-full panel-updates">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-7 col-lg-8">
+                <h4 class="panel-title text-info">Tweets con Polaridad Casi Positiva</h4>
+                <h3 id="porcentaje_casi_positivo"></h3>
+                <div class="progress">
+                  <div id="porcentaje_casi_positivo_barra" style="width: 0%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-success">
+                  </div>
+                </div>
+                <p id="porcentaje_casi_positivo_texto" class="porcentaje_texto"></p>
+              </div>
+              <div class="col-xs-5 col-lg-4 text-right" id="porcentaje_casi_positivo_grafica">
+              </div>
+            </div>
+          </div>
+        </div><!-- panel -->
+      </div><!-- col-sm-6 -->
+
+      <div class="col-sm-6">
+        <div class="panel panel-success-full panel-updates">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-7 col-lg-8">
+                <h4 class="panel-title text-success">Tweets con polaridad neutra</h4>
+                <h3 id="porcentaje_neutro"></h3>
+                <div class="progress">
+                  <div id="porcentaje_neutro_barra" style="width: 0%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="55.4" role="progressbar" class="progress-bar progress-bar-info">
+                  </div>
+                </div>
+                <p id="porcentaje_neutro_texto" class="porcentaje_texto"></p>
+              </div>
+              <div class="col-xs-5 col-lg-4 text-right" id="porcentaje_neutro_grafica">
+              </div>
+            </div>
+          </div>
+        </div><!-- panel -->
+      </div><!-- col-sm-6 -->
+
+      <div class="col-sm-6">
+        <div class="panel panel-warning-full panel-updates">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-7 col-lg-8">
+                <h4 class="panel-title text-warning">Tweets con polaridad casi negativa</h4>
+                <h3 id="porcentaje_casi_negativo"></h3>
+                <div class="progress">
+                  <div id="porcentaje_casi_negativo_barra" style="width: 0%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-info">
+                  </div>
+                </div>
+                <p id="porcentaje_casi_negativo_texto" class="porcentaje_texto"></p>
+              </div>
+              <div class="col-xs-5 col-lg-4 text-right" id="porcentaje_casi_negativo_grafica">
+              </div>
+            </div>
+          </div>
+        </div><!-- panel -->
+      </div><!-- col-sm-6 -->
+
+      <div class="col-sm-12">
+        <div class="panel panel-danger-full panel-updates">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-7 col-lg-8">
+                <h4 class="panel-title text-warning">Tweets con polaridad negativa</h4>
+                <h3 id="porcentaje_negativo"></h3>
+                <div class="progress">
+                  <div id="porcentaje_negativo_barra" style="width: 0%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-info">
+                  </div>
+                </div>
+                <p id="porcentaje_negativo_texto" class="porcentaje_texto"></p>
+              </div>
+              <div class="col-xs-5 col-lg-4 text-right" id="porcentaje_negativo_grafica">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- row -->
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    $.get('/summary', function(data){
+      var total = data.total_tweets;
+      for(item in data){
+        $("#"+item).text(data[item]);
+      }
+      $.get('/polarities', function(data){
+        //negativo
+        var negativo = data[0].count*100/total;
+        $("#porcentaje_negativo").text(negativo.toFixed(4));
+        $("#porcentaje_negativo_barra").css({'width': negativo.toFixed(4) + '%'});
+        $("#porcentaje_negativo_grafica").append('<input type="text" value="'+negativo.toFixed(3)+'" class="dial-danger">');
+        $("#porcentaje_negativo_texto").text("Total de Tweets: " + data[0].count);
+        $('.dial-danger').knob({
+      		readOnly: true,
+      		width: '70px',
+      		bgColor: '#E7E9EE',
+      		fgColor: '#D9534F',
+      		inputColor: '#fff'
+      	});
+
+        //casi negativo
+        var casi_negativo = data[1].count*100/total;
+        $("#porcentaje_casi_negativo").text(casi_negativo.toFixed(4) + '%');
+        $("#porcentaje_casi_negativo_barra").css({'width': casi_negativo.toFixed(4) + '%'});
+        $("#porcentaje_casi_negativo_grafica").append('<input type="text" value="' + casi_negativo.toFixed(2) + '" class="dial-warning">');
+        $("#porcentaje_casi_negativo_texto").text("Total de Tweets: " + data[1].count);
+        $('.dial-warning').knob({
+      		readOnly: true,
+      		width: '70px',
+      		bgColor: '#FFFFFF',
+      		fgColor: '#e6ad5c',
+      		inputColor: '#000'
+      	});
+
+        //neutro
+        var neutro = data[2].count*100/total;
+        $("#porcentaje_neutro").text(neutro.toFixed(4) + '%');
+        $("#porcentaje_neutro_barra").css({'width': neutro.toFixed(4) + '%'});
+        $("#porcentaje_neutro_grafica").append('<input type="text" value="' + neutro.toFixed(2) + '" class="dial-info">');
+        $("#porcentaje_neutro_texto").text("Total de Tweets: " + data[2].count);
+        $('.dial-info').knob({
+      		readOnly: true,
+      		width: '70px',
+      		bgColor: '#fff',
+      		fgColor: '#66BAC4',
+      		inputColor: '#fff'
+      	});
+
+        //casi positivo
+        var casi_positivo = data[3].count*100/total;
+        $("#porcentaje_casi_positivo").text(casi_positivo.toFixed(4) + "%");
+        $("#porcentaje_casi_positivo_barra").css({'width': casi_positivo.toFixed(4) + '%'});
+        $("#porcentaje_casi_positivo_grafica").append('<input type="text" value="' + casi_positivo.toFixed(3) + '" class="dial-info">');
+        $("#porcentaje_casi_positivo_texto").text("Total de Tweets: " + data[3].count);
+        $('.dial-info').knob({
+          readOnly: true,
+          width: '70px',
+          bgColor: '#E7E9EE',
+          fgColor: '#259CAB',
+          inputColor: '#262B36'
+        });
+
+        //positivo
+        var positivo = data[4].count*100/total;
+        $("#porcentaje_positivo").text(positivo.toFixed(4)  + "%");
+        $("#porcentaje_positivo_barra").css({'width': positivo.toFixed(4) + '%'});
+        $("#porcentaje_positivo_grafica").append('<input type="text" value="'+positivo.toFixed(3)+'" class="dial-success">');
+        $("#porcentaje_positivo_texto").text("Total de Tweets: " + data[4].count);
+        $('.dial-success').knob({
+      		readOnly: true,
+      		width: '70px',
+      		bgColor: '#E7E9EE',
+      		fgColor: '#259CAB',
+      		inputColor: '#fff'
+      	});
+      });
+    });
+  });
+</script>
+{% endblock %}

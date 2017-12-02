@@ -1,0 +1,75 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" %}">
+{% endblock %}
+
+{% block main %}
+<div class="contentpanel">
+
+  <ol class="breadcrumb breadcrumb-quirk">
+    <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
+    <li class="active">Listado de Tweets</li>
+  </ol>
+
+  <div class="panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">Listado Completo de Tweets</h4>
+      <p>Se realizó la extracción de más de 40 mil tweets de las cuentas más relevantes de los temas solicitados.</p>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table id="dataTable1" class="table table-bordered table-striped-col">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Tema</th>
+              <th>Texto</th>
+              <th>Idioma</th>
+              <th>Ubicación</th>
+              <th>Polaridad</th>
+            </tr>
+          </thead>
+
+          <tfoot>
+            <tr>
+              <th>Usuario</th>
+              <th>Tema</th>
+              <th>Texto</th>
+              <th>Idioma</th>
+              <th>Ubicación</th>
+              <th>Polaridad</th>
+            </tr>
+          </tfoot>
+
+          <tbody>
+            {% for tweet in tweets %}
+            <tr>
+              <td>{{tweet.tweet.user.screen_name}}</td>
+              <td>{{tweet.topic_id}}</td>
+              <td>{{tweet.payload}}</td>
+              <td>{{tweet.lang}}</td>
+              <td>{{tweet.location.place}}</td>
+              <td>{{tweet.polarity_id}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static "dashboard/lib/datatables/jquery.dataTables.js" %}"></script>
+<script src="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.js" %}"></script>
+<script>
+$(document).ready(function() {
+  'use strict';
+  $('#dataTable1').DataTable();
+});
+</script>
+{% endblock %}

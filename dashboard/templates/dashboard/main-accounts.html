@@ -1,0 +1,56 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" %}">
+{% endblock %}
+
+{% block main %}
+<div class="contentpanel">
+
+  <ol class="breadcrumb breadcrumb-quirk">
+    <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
+    <li class="active">Cuentas Principales</li>
+  </ol>
+
+  <div class="panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">Listado de Cuentas Principales</h4>
+      <p>Estas son las cuentas extraidas del análisis de los tweets recopilados.</p>
+    </div>
+    <div class="panel-body">
+      <ul class="media-list user-list" id="accounts">
+      </ul>
+    </div>
+    <hr>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static "dashboard/lib/datatables/jquery.dataTables.js" %}"></script>
+<script src="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.js" %}"></script>
+<script>
+$(document).ready(function() {
+  'use strict';
+  $.get('/selected_accounts', function(data){
+    data.forEach(function(user){
+      console.log(user);
+      var user_profile = "<li class='media col-sm-6' style='height: 80px;'>\
+        <div class='media-left'>\
+          <a href='#'>\
+            <img class='media-object img-circle' src='" + user.image + "' alt=''>\
+          </a>\
+        </div>\
+        <div class='media-body'>\
+          <h4 class='media-heading nomargin'><a href='/cuentas-principales/" + user.screen_name + "'>" + user.name +"</a></h4>\
+          <p>" + user.description + "</p>\
+        </div>\
+      </li>";
+      $("#accounts").append(user_profile);
+    });
+  });
+});
+</script>
+{% endblock %}

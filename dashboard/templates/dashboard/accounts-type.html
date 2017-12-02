@@ -1,0 +1,98 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" %}">
+{% endblock %}
+
+{% block main %}
+<div class="contentpanel">
+
+  <ol class="breadcrumb breadcrumb-quirk">
+    <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
+    <li class="active">Cuentas Por Tipo</li>
+  </ol>
+  <div class="panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">Resumen de Cuentas por Tipo</h4>
+      <p>La distribución de cuentas por tipo se encuentra de la siguiente manera:</p>
+    </div>
+    <div class="panel-body">
+      <div id="donut-summary" class="body-chart"></div>
+      <div class="col-md-12 col-lg-12 dash-right">
+        <div class="row">
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="panel panel-inverse">
+              <div class="panel-heading">
+                <h4 class="panel-title">@ Más Positivas</h4>
+              </div>
+              <div class="panel-body">
+                <ul class="media-list user-list" id="accounts-possitive">
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="panel panel-inverse">
+              <div class="panel-heading">
+                <h4 class="panel-title">@ Más Negativas</h4>
+              </div>
+              <div class="panel-body">
+                <ul class="media-list user-list" id="accounts-negative">
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static "dashboard/lib/morrisjs/morris.js" %}"></script>
+<script src="{% static "dashboard/lib/raphael/raphael.js" %}"></script>
+<script>
+$(document).ready(function() {
+  'use strict';
+  $.get('/accounts_classified_summary', function(summary){
+    var data = [];
+    summary.forEach(function(type){
+      data.push({"label": type.type, "value": type.count});
+    });
+    new Morris.Donut({
+       element: 'donut-summary',
+       data: data,
+       colors: ['#D9534F','#1CAF9A','#428BCA','#5BC0DE','#428BCA', '#D0534F','#1CAF9A','#428BCA']
+    });
+  });
+  $.get('/accounts_classified/?sort=-1', function(data){
+    data.forEach(function(user){console.log(user);
+      var user_profile = "<li class='media'>\
+        <div class='media-body'>\
+          <h4 class='media-heading nomargin'><a target='_blank' href='https://twitter.com/" + user.account + "'>" + user.account +"</a></h4>\
+          <span>Tipo de clasificación: </span>" + user.type + "<br>\
+          <span>Puntaje de polaridad: </span>" + user.polarity_score + "\
+        </div>\
+      </li>";
+      $("#accounts-possitive").append(user_profile);
+    });
+  });
+  $.get('/accounts_classified/?sort=1', function(data){
+    data.forEach(function(user){console.log(user);
+      var user_profile = "<li class='media'>\
+        <div class='media-body'>\
+          <h4 class='media-heading nomargin'><a target='_blank' href='https://twitter.com/" + user.account + "'>" + user.account +"</a></h4>\
+          <span>Tipo de clasificación: </span>" + user.type + "<br>\
+          <span>Puntaje de polaridad: </span>" + user.polarity_score + "\
+        </div>\
+      </li>";
+      $("#accounts-negative").append(user_profile);
+    });
+  });
+});
+</script>
+{% endblock %}

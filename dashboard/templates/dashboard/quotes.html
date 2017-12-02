@@ -1,0 +1,125 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" %}">
+{% endblock %}
+
+{% block main %}
+<div class="contentpanel">
+
+  <ol class="breadcrumb breadcrumb-quirk">
+    <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
+    <li class="active">Listado de Citas</li>
+  </ol>
+    <div class="panel">
+      <div class="panel-heading">
+        <h4 class="panel-title">Cuentas citadas con Frecuencia</h4>
+        <p>Las cuentas citadas con mayor frecuencia durante el ciclo de recolección fueron.</p>
+      </div>
+      <div class="panel-body">
+        <div id="container" style="min-width: 300px; height: 400px; margin: 0 auto"></div>
+      </div>
+    </div><!-- panel -->
+  <div class="panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">Listado Completo de Cuentas citadas</h4>
+      <p>Se realizó la extracción de más de 40 mil tweets de las cuentas más relevantes de los temas solicitados.</p>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table id="dataTable1" class="table table-bordered table-striped-col">
+          <thead>
+            <tr>
+              <th>Cuenta citada</th>
+              <th>Cantidad de Tweets</th>
+            </tr>
+          </thead>
+
+          <tfoot>
+            <tr>
+              <th>Cuenta citada</th>
+              <th>Cantidad de Tweets</th>
+            </tr>
+          </tfoot>
+
+          <tbody>
+            {% for quote in quotes %}
+            <tr>
+              <td>{{quote.quote}}</td>
+              <td>{{quote.count}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static "dashboard/lib/datatables/jquery.dataTables.js" %}"></script>
+<script src="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.js" %}"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script>
+$(document).ready(function() {
+  'use strict';
+  $('#dataTable1').DataTable({"order": [[ 1, "desc" ]]});
+  $.get('/quotes?offset=0&limit=10', function(data){
+    var chart_data = [];
+    data.forEach(function(quote){
+      chart_data.push([quote.quote, quote.count])
+    });
+    Highcharts.chart('container', {
+      chart: {
+          type: 'column'
+      },
+      title: {
+          text: 'Cuentas citadas con frecuencia'
+      },
+      xAxis: {
+          type: 'category',
+          labels: {
+              rotation: -45,
+              style: {
+                  fontSize: '13px',
+                  fontFamily: 'Verdana, sans-serif'
+              }
+          }
+      },
+      yAxis: {
+          min: 0,
+          title: {
+              text: 'Cantidad de apariciones'
+          }
+      },
+      legend: {
+          enabled: false
+      },
+      tooltip: {
+          pointFormat: 'Aparece: <b>{point.y} veces</b>'
+      },
+      series: [{
+          name: 'Hashtags',
+          data: chart_data,
+          dataLabels: {
+              enabled: true,
+              rotation: -90,
+              color: '#FFFFFF',
+              align: 'right',
+              format: '{point.y}', // one decimal
+              y: 10, // 10 pixels down from the top
+              style: {
+                  fontSize: '13px',
+                  fontFamily: 'Verdana, sans-serif'
+              }
+          }
+      }]
+    });
+  });
+});
+</script>
+{% endblock %}

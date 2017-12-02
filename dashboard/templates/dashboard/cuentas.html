@@ -1,0 +1,93 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" %}">
+{% endblock %}
+
+{% block main %}
+<div class="contentpanel">
+
+  <ol class="breadcrumb breadcrumb-quirk">
+    <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
+    <li class="active">Cuentas Involucradas</li>
+  </ol>
+
+  <div class="panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">Listado Completo Cuentas</h4>
+      <p>Estas son las cuentas extraidas del análisis de los tweets recopilados.</p>
+    </div>
+    <div class="panel-body">
+      <ul class="media-list user-list" id="accounts">
+        <li class="media col-sm-4">
+          <div class="media-left">
+            <a href="#">
+              <img class="media-object img-circle" src="{% static "dashboard/images/photos/user2.png" %}" alt="">
+            </a>
+          </div>
+          <div class="media-body">
+            <h4 class="media-heading nomargin"><a href="">Floyd M. Romero</a></h4>
+            is now following <a href="">Christina R. Hill</a>
+            <small class="date"><i class="glyphicon glyphicon-time"></i> Just now</small>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <hr>
+    <ul class="pager">
+      <li><a href="#" id="anterior"><i class="fa fa-angle-left"></i> Anterior</a></li>
+      <li><a href="#" id="siguiente">Siguiente <i class="fa fa-angle-right"></i></a></li>
+    </ul>
+    <hr>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static "dashboard/lib/datatables/jquery.dataTables.js" %}"></script>
+<script src="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.js" %}"></script>
+<script>
+$(document).ready(function() {
+  'use strict';
+  var page = 0;
+  var page_size = 30;
+  $('#dataTable1').DataTable();
+  var load = function(){
+    $.get('/accounts?offset='+(page*page_size)+'&limit='+page_size, function(data){
+      $("#accounts").html('');
+      data.forEach(function(user){
+        var user_profile = "<li class='media col-sm-4' style='height: 150px;'>\
+          <div class='media-left'>\
+            <a href='#'>\
+              <img class='media-object img-circle' src='" + user.image + "' alt=''>\
+            </a>\
+          </div>\
+          <div class='media-body'>\
+            <h4 class='media-heading nomargin'><a target='_blank' href='https://twitter.com/" + user.username + "'>" + user.name +"</a></h4>\
+            <p>" + user.description + "</p>\
+            <span>" + user.location +"</span><br>\
+            <span>" + user.tweets_count + "</span> Tweets publicados<br>\
+            <span>" + user.rtweets_count + "</span> RT hechos\
+          </div>\
+        </li>";
+        $("#accounts").append(user_profile);
+        console.log(user);
+      });
+    });
+  }
+  load();
+  $("#anterior").on('click', function(){
+    if(page!=0){
+      page -= 1;
+      load();
+    }
+  });
+  $("#siguiente").on('click', function(){
+    page += 1;
+    load();
+  });
+});
+</script>
+{% endblock %}

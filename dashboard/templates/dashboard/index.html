@@ -1,0 +1,171 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block main %}
+<div class="contentpanel">
+
+  <div class="row">
+    <div class="col-md-9 col-lg-8 dash-left">
+      <div class="panel panel-announcement">
+        <div class="panel-heading">
+          <h4 class="panel-title">Análisis y enriquecimiento de información</h4>
+        </div>
+        <div class="panel-body">
+          <h4>Fernando Arruza <span class="text-primary">f.arruza@uniandes.edu.co</span></h4>
+          <h4>José Alvarez <span class="text-primary">jr.alvarez@uniandes.edu.co</span></h4>
+        </div>
+      </div><!-- panel -->
+
+      <div class="panel panel-site-traffic">
+        <div class="panel-heading">
+          <h4 class="panel-title text-success">Resumen del dataset analizado</h4>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-6 col-sm-4">
+              <div class="pull-left">
+                <div class="icon icon ion-social-twitter" style="background-color: #2574ab; padding: 7px 15px;"></div>
+              </div>
+              <div class="pull-left">
+                <h4 class="panel-title">Tweets Analizados</h4>
+                <h3 id="total_tweets"></h3>
+              </div>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+              <div class="pull-left">
+                <div class="icon fa fa-retweet" style="background-color: #259dab; padding: 7px 10px;"></div>
+              </div>
+              <div class="pull-left">
+                <h4 class="panel-title">Total de Retweets</h4>
+                <h3 id="total_rts"></h3>
+              </div>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+              <div class="pull-left">
+                <div class="icon icon ion-person" style="background-color: #9d70e2; padding: 7px 18px;"></div>
+              </div>
+              <div class="pull-left">
+                <h4 class="panel-title">Cuentas Involucradas</h4>
+                <h3 id="total_accounts"></h3>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-xs-6 col-sm-6">
+              <div class="pull-left">
+                <div class="icon icon ion-pound" style="background-color: #e27c79; padding: 7px 16px;"></div>
+              </div>
+              <div class="pull-left">
+                <h4 class="panel-title">Hashtags Encontrados</h4>
+                <h3 id="total_hashtags"></h3>
+              </div>
+            </div>
+            <div class="col-xs-6 col-sm-6">
+              <div class="pull-left">
+                <div class="icon icon ion-at" style="background-color: #488dd8; padding: 7px 14px;"></div>
+              </div>
+              <div class="pull-left">
+                <h4 class="panel-title">Citas Encontradas</h4>
+                <h3 id="total_quotes"></h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row panel-quick-page">
+        <div class="col-xs-4 col-sm-4 col-md-4 page-statistics">
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">Análisis de Polaridades</h4>
+            </div>
+            <div class="panel-body">
+              <div class="page-icon">
+                <a href="{% url 'polarities-view' %}" style="color:#fff"><i class="icon ion-ios-pulse-strong"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 page-products">
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">Cuentas Involucradas</h4>
+            </div>
+            <div class="panel-body">
+              <div class="page-icon">
+                <a href="{% url 'accounts-view' %}" style="color:#fff"><i class="icon ion-person-stalker"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-4 col-sm-3 col-md-2 page-events">
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">Hashtags</h4>
+            </div>
+            <div class="panel-body">
+              <div class="page-icon">
+                <a href="{% url 'hashtags-view' %}" style="color:#fff"><i class="icon icon ion-pound"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-4 col-sm-3 col-md-2 page-messages">
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">Ubicaciones</h4>
+            </div>
+            <div class="panel-body">
+              <div class="page-icon">
+                <a href="{% url 'locations-view' %}" style="color:#fff"><i class="ion-ios-location"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-4 col-sm-5 col-md-2 page-reports">
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">Citas</h4>
+            </div>
+            <div class="panel-body">
+              <div class="page-icon">
+                <a href="{% url 'quotes-view' %}" style="color:#fff"><i class="icon ion-at"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 page-user">
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">Listado Completo de Tweets</h4>
+            </div>
+            <div class="panel-body">
+              <div class="page-icon">
+                <a href="{% url 'tweets-view' %}" style="color:#fff">
+                  <i class="icon icon ion-social-twitter"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- row -->
+
+    </div><!-- col-md-9 -->
+  </div><!-- row -->
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    $.get('/summary', function(data){
+      var total = data.total_tweets;
+      for(item in data){
+        $("#"+item).text(data[item]);
+      }
+    });
+  });
+</script>
+{% endblock %}
