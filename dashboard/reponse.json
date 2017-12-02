@@ -1,0 +1,45 @@
+{
+  'id': 'https://musicfans.stackexchange.com/questions/6034/-/6035#6035',
+  'guidislink': True,
+  'link': 'https://musicfans.stackexchange.com/questions/6034/what-violin-piece-is-played-by-fargas-in-the-movie-the-ninth-gate/6035#6035',
+  're_rank': {
+    'scheme': 'https://musicfans.stackexchange.com'
+    },
+  'title': 'Answer by tumasgiu for What violin piece is played by Fargas in the movie "The Ninth Gate"?',
+  'title_detail': {
+    'type': 'text/plain',
+    'language': None,
+    'base': 'https://musicfans.stackexchange.com/feeds/question/6034',
+    'value': 'Answer by tumasgiu for What violin piece is played by Fargas in the movie "The Ninth Gate"?'
+  },
+  'authors': [
+    {
+      'name': 'tumasgiu',
+      'href': 'https://musicfans.stackexchange.com/users/5045'
+    }
+  ],
+  'author_detail': {
+    'name': 'tumasgiu',
+    'href': 'https://musicfans.stackexchange.com/users/5045'
+  },
+  'href': 'https://musicfans.stackexchange.com/users/5045',
+  'author': 'tumasgiu',
+  'links': [
+    {
+      'rel': 'alternate',
+      'href': 'https://musicfans.stackexchange.com/questions/6034/what-violin-piece-is-played-by-fargas-in-the-movie-the-ninth-gate/6035#6035',
+      'type': 'text/html'
+    }
+  ],
+  'published': '2017-11-17T15:57:40Z',
+  'published_parsed': time.struct_time(tm_year=2017, tm_mon=11, tm_mday=17, tm_hour=15, tm_min=57, tm_sec=40, tm_wday=4, tm_yday=321, tm_isdst=0),
+  'updated': '2017-11-21T10:09:53Z',
+  'updated_parsed': time.struct_time(tm_year=2017, tm_mon=11, tm_mday=21, tm_hour=10, tm_min=9, tm_sec=53, tm_wday=1, tm_yday=325, tm_isdst=0),
+  'summary': '<p>According to the U.S. version of the <a href="https://en.wikipedia.org/wiki/The_Ninth_Gate" rel="nofollow noreferrer">Wikipedia article about the movie</a>, the main theme is inspired by the "Havenese", by Camille St Saëns.</p>\n\n<p>Much of the rest of the movie soundtrack also seems to be inspired by St Saëns. And I remembered that he composed a symphonic poem named <a href="https://en.wikipedia.org/wiki/Danse_macabre_(Saint-Sa%C3%ABns)" rel="nofollow noreferrer">"La danse macabre"</a> which has the Devil for a protagonist.</p>\n\n<p>So, it turns out that the little piece of violin played in the movie is actually a quote of the "Havanese": <a href="https://youtu.be/mnsBYmQ2-i4?t=5m58s" rel="nofollow noreferrer">https://youtu.be/mnsBYmQ2-i4?t=5m58s</a></p>\n\n<p>It is mentioned in the <a href="http://www.imdb.com/title/tt0142688/soundtrack?ref_=tt_ql_trv_7" rel="nofollow noreferrer">IMDB file of the movie</a> and even appears at the end of the movie credits.</p>\n\n<p>The record used in the movie is owned by the Boston Music Company.</p>',
+  'summary_detail': {
+    'type': 'text/html',
+    'language': None,
+    'base': 'https://musicfans.stackexchange.com/feeds/question/6034',
+    'value': '<p>According to the U.S. version of the <a href="https://en.wikipedia.org/wiki/The_Ninth_Gate" rel="nofollow noreferrer">Wikipedia article about the movie</a>, the main theme is inspired by the "Havenese", by Camille St Saëns.</p>\n\n<p>Much of the rest of the movie soundtrack also seems to be inspired by St Saëns. And I remembered that he composed a symphonic poem named <a href="https://en.wikipedia.org/wiki/Danse_macabre_(Saint-Sa%C3%ABns)" rel="nofollow noreferrer">"La danse macabre"</a> which has the Devil for a protagonist.</p>\n\n<p>So, it turns out that the little piece of violin played in the movie is actually a quote of the "Havanese": <a href="https://youtu.be/mnsBYmQ2-i4?t=5m58s" rel="nofollow noreferrer">https://youtu.be/mnsBYmQ2-i4?t=5m58s</a></p>\n\n<p>It is mentioned in the <a href="http://www.imdb.com/title/tt0142688/soundtrack?ref_=tt_ql_trv_7" rel="nofollow noreferrer">IMDB file of the movie</a> and even appears at the end of the movie credits.</p>\n\n<p>The record used in the movie is owned by the Boston Music Company.</p>'
+  }
+}
