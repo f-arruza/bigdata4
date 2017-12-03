@@ -18,10 +18,17 @@ def get_data_object(semantic_object):
         return str(semantic_object['value'])
     return ''
 
+def get_data_point(point):
+	point = point.replace('POINT(','')
+	point = point.replace(')','')
+	point = point.replace(')','')
+	coordinates = point.split()
+	return coordinates[0],coordinates[1]
+
 def query_sparkql(entity):
     query = ' PREFIX db: <http://dbpedia.org/resource/>'\
             ' SELECT ?p ?o'\
-            ' WHERE { db:''' + entity + ' ?p ?o } LIMIT 1000'
+            ' WHERE { db:''' + entity + ' ?p ?o } LIMIT 10000'
 
     da = SPARQLWrapper('http://dbpedia.org/sparql')
     da.setReturnFormat(JSON)
@@ -61,7 +68,84 @@ def search_person(person):
     else:
         return None
 
-def search_persons(topic_id, data):
+def search_organization(organization):
+    semantic_data = query_sparkql(clear_text(organization))
+
+    org_data = {}
+    services = []
+    products = []
+    places = []
+    persons = []
+    abstract = None
+
+    for relation in semantic_data['results']['bindings']:
+        if relation['p']['value'] == 'http://dbpedia.org/property/locationCity':
+            org_data['city'] = get_data_object(relation['o'])
+        if relation['p']['value'] == 'http://dbpedia.org/property/locationCountry':
+            org_data['country'] = get_data_object(relation['o'])
+        if relation['p']['value'] == 'http://dbpedia.org/ontology/type':
+            org_data['type'] = get_data_object(relation['o'])
+        if relation['p']['value'] == 'http://dbpedia.org/ontology/service':
+            services.append(get_data_object(relation['o']))
+        if relation['p']['value'] == 'http://dbpedia.org/ontology/product':
+            products.append(get_data_object(relation['o']))
+        if relation['p']['value'] == 'http://dbpedia.org/ontology/foundationPlace':
+            products.append(get_data_object(relation['o']))
+        if relation['p']['value'] == 'http://dbpedia.org/ontology/wikiPageExternalLink':
+            org_data['page'] = get_data_object(relation['o'])
+        if relation['p']['value'] == 'http://xmlns.com/foaf/0.1/name':
+            org_data['fullname'] = get_data_object(relation['o'])
+        if relation['p']['value'] == 'http://dbpedia.org/ontology/abstract' and abstract is None:
+            abstract = get_data_object(relation['o'])
+        if relation['p']['value'] == 'http://dbpedia.org/ontology/keyPerson':
+            persons.append(get_data_object(relation['o']))
+
+    if len(semantic_data['results']['bindings']) > 0:
+        org_data['name'] = organization
+        org_data['abstract'] = abstract
+        org_data['services'] = services
+        org_data['products'] = products
+        org_data['places'] = places
+        org_data['persons'] = persons
+        return org_data
+    else:
+        return None
+
+def search_location(location):
+    semantic_data = query_sparkql(clear_text(location))
+
+    location_data = {}
+    coordinates = []
+
+    for relation in semantic_data['results']['bindings']:
+        if relation['p']['value'] == 'http://dbpedia.org/ontology/country':
+            location_data['country'] = get_data_object(relation['o'])
+        if relation['p']['value'] == 'http://xmlns.com/foaf/0.1/name':
+            location_data['fullname'] = get_data_object(relation['o'])
+        if relation['p']['value'] == 'http://xmlns.com/foaf/0.1/homepage':
+            location_data['page'] = get_data_object(relation['o'])
+        if relation['p']['value'] == 'http://www.w3.org/2003/01/geo/wgs84_pos#geometry':
+            point = get_data_point(relation['o']['value'])
+            coordinates.append( { 'lat' : point[0], 'lon' : point[1] })
+        if relation['p']['value'] == 'http://dbpedia.org/ontology/PopulatedPlace/areaTotal':
+            location_data['area'] = get_data_object(relation['o'])
+        if relation['p']['value'] == 'http://dbpedia.org/ontology/capital':
+            location_data['capital'] = get_data_object(relation['o'])
+        if relation['p']['value'] == 'http://dbpedia.org/ontology/populationTotal':
+            location_data['population'] = get_data_object(relation['o'])
+        if relation['p']['value'] == 'http://dbpedia.org/property/countryCode':
+            location_data['code'] = get_data_object(relation['o'])
+        if relation['p']['value'] == 'http://dbpedia.org/property/currencyCode':
+            location_data['currency'] = get_data_object(relation['o'])
+
+    if len(semantic_data['results']['bindings']) > 0:
+        location_data['name'] = location
+        location_data['coordinates'] = coordinates
+        return location_data
+    else:
+        return None
+
+def enrich_data(topic_id, data):
     # title - entities
     for ent_title in data['entities_title']:
         type = ent_title['sementity']['type']
@@ -69,13 +153,35 @@ def search_persons(topic_id, data):
         # Person
         if type.startswith('Top>Person>'):
             dto = db.persons.find({'topic_id' : topic_id, 'data.name' : ent_title['form']})
+            # if dto.count() == 0:
+            #     person_data = search_person(ent_title['form'])
+            #     if person_data is not None:
+            #         db.persons.insert_one({
+            #             'topic_id' : topic_id,
+            #             'source' : 'dbpedia',
+            #             'data' : person_data
+            #         })
+        # Organization
+        if type.startswith('Top>Organization>'):
+            dto = db.organizations.find({'topic_id' : topic_id, 'data.name' : ent_title['form']})
+            # if dto.count() == 0:
+            #     org_data = search_organization(ent_title['form'])
+            #     if org_data is not None:
+            #         db.organizations.insert_one({
+            #             'topic_id' : topic_id,
+            #             'source' : 'dbpedia',
+            #             'data' : org_data
+            #         })
+        # Location
+        if type.startswith('Top>Location>'):
+            dto = db.locations_ent.find({'topic_id' : topic_id, 'data.name' : ent_title['form']})
             if dto.count() == 0:
-                person_data = search_person(ent_title['form'])
-                if person_data is not None:
-                    db.persons.insert_one({
+                location_data = search_location(ent_title['form'])
+                if location_data is not None:
+                    db.locations_ent.insert_one({
                         'topic_id' : topic_id,
                         'source' : 'dbpedia',
-                        'data' : person_data
+                        'data' : location_data
                     })
 
     # summary - entities
@@ -87,11 +193,33 @@ def search_persons(topic_id, data):
             dto = db.persons.find({'topic_id' : topic_id, 'data.name' : ent_title['form']})
             if dto.count() == 0:
                 person_data = search_person(ent_title['form'])
-                if person_data is not None:
-                    db.persons.insert_one({
+                # if person_data is not None:
+                #     db.persons.insert_one({
+                #         'topic_id' : topic_id,
+                #         'source' : 'dbpedia',
+                #         'data' : person_data
+                #     })
+        # Organization
+        if type.startswith('Top>Organization>'):
+            dto = db.organizations.find({'topic_id' : topic_id, 'data.name' : ent_title['form']})
+            # if dto.count() == 0:
+            #     org_data = search_organization(ent_title['form'])
+            #     if org_data is not None:
+            #         db.organizations.insert_one({
+            #             'topic_id' : topic_id,
+            #             'source' : 'dbpedia',
+            #             'data' : org_data
+            #         })
+        # Location
+        if type.startswith('Top>Location>'):
+            dto = db.locations_ent.find({'topic_id' : topic_id, 'data.name' : ent_title['form']})
+            if dto.count() == 0:
+                location_data = search_location(ent_title['form'])
+                if location_data is not None:
+                    db.locations_ent.insert_one({
                         'topic_id' : topic_id,
                         'source' : 'dbpedia',
-                        'data' : person_data
+                        'data' : location_data
                     })
 
 
@@ -102,7 +230,7 @@ if __name__ == "__main__":
     data = db.musicfans_topics.find({})
     for topic in data:
         # topic - request
-        search_persons(ObjectId(topic['_id']), topic)
+        enrich_data(ObjectId(topic['_id']), topic)
         # responses
         for resp in topic['responses']:
-            search_persons(ObjectId(topic['_id']), resp)
+            enrich_data(ObjectId(topic['_id']), resp)

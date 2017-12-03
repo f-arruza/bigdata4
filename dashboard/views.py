@@ -201,11 +201,71 @@ def musicfans(request):
     return HttpResponse(json.dumps(result, ensure_ascii=False).encode('utf-8'),
                         content_type="application/json; charset=utf-8")
 
+def musicfans_by_id(request, topic_id):
+    data = db['musicfans_topics'].find({ '_id' : ObjectId(topic_id) })
+
+    result = []
+    for dto in data:
+        json_data = {
+            'id': dto['id'],
+            'guid': dto['guid'],
+            'title': dto['title'],
+            'description': dto['description'],
+            'summary': dto['summary'],
+            'pubdate': dto['pubdate'].strftime("%Y-%m-%d %H:%M:%S"),
+            'link': dto['link'],
+            'author' : dto['author'],
+            'author_link': dto['author_link'],
+            'categories': dto['categories'],
+            'responses': dto['responses'],
+            'entities': dto['entities'],
+            'entities_title': dto['entities_title'],
+        }
+        result.append(json_data)
+    return HttpResponse(json.dumps(result, ensure_ascii=False).encode('utf-8'),
+                        content_type="application/json; charset=utf-8")
+
 def persons(request):
     topic_id = request.GET.get('topic_id')
     if (topic_id is not None):
         try:
             data = db['persons'].find({ 'topic_id' : ObjectId(topic_id) })
+            result = []
+            for dt in data:
+                result.append({
+                    'source' : dt['source'],
+                    'data' : dt['data'],
+                })
+        except:
+            result = 'topic_id incorrect.'
+    else:
+        result = 'topic_id parameter not found.'
+    return HttpResponse(json.dumps(result, ensure_ascii=False).encode('utf-8'),
+                        content_type="application/json; charset=utf-8")
+
+def organizations(request):
+    topic_id = request.GET.get('topic_id')
+    if (topic_id is not None):
+        try:
+            data = db['organizations'].find({ 'topic_id' : ObjectId(topic_id) })
+            result = []
+            for dt in data:
+                result.append({
+                    'source' : dt['source'],
+                    'data' : dt['data'],
+                })
+        except:
+            result = 'topic_id incorrect.'
+    else:
+        result = 'topic_id parameter not found.'
+    return HttpResponse(json.dumps(result, ensure_ascii=False).encode('utf-8'),
+                        content_type="application/json; charset=utf-8")
+
+def locations_ent(request):
+    topic_id = request.GET.get('topic_id')
+    if (topic_id is not None):
+        try:
+            data = db['locations_ent'].find({ 'topic_id' : ObjectId(topic_id) })
             result = []
             for dt in data:
                 result.append({
