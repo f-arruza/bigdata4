@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from .views import (
-    IndexView, TweetsView, AccountsView, HastagsView, musicfans,
+    IndexView, TweetsView, AccountsView, HastagsView, musicfans, persons,
     summary, accounts, hashtags, locations, quotes, polarities, tweets,
     LocationsView, QuotesView, PolaritiesView
 )
@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^polarities/$', polarities, name='polarities'),
     url(r'^tweets/$', tweets, name='tweets'),
     url(r'^musicfans/$', musicfans, name='musicfans'),
+    url(r'^persons/$', persons, name='persons'),
     url(r'^ver-tweets/$', TweetsView.as_view(), name='tweets-view'),
     url(
         r'^ver-polaridades/$',

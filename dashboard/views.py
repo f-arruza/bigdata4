@@ -3,9 +3,10 @@ import json
 import numpy
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from pymongo import MongoClient
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from bson.objectid import ObjectId
+from pymongo import MongoClient
 
 # Create your views here.
 client = MongoClient('localhost', 27017)
@@ -192,10 +193,29 @@ def musicfans(request):
                 'categories': dto['categories'],
                 'responses': dto['responses'],
                 'entities': dto['entities'],
+                'entities_title': dto['entities_title'],
             }
             result.append(json_data)
     else:
         result = 'Limit and offset parameters not found.'
+    return HttpResponse(json.dumps(result, ensure_ascii=False).encode('utf-8'),
+                        content_type="application/json; charset=utf-8")
+
+def persons(request):
+    topic_id = request.GET.get('topic_id')
+    if (topic_id is not None):
+        try:
+            data = db['persons'].find({ 'topic_id' : ObjectId(topic_id) })
+            result = []
+            for dt in data:
+                result.append({
+                    'source' : dt['source'],
+                    'data' : dt['data'],
+                })
+        except:
+            result = 'topic_id incorrect.'
+    else:
+        result = 'topic_id parameter not found.'
     return HttpResponse(json.dumps(result, ensure_ascii=False).encode('utf-8'),
                         content_type="application/json; charset=utf-8")
 
