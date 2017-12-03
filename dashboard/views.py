@@ -191,6 +191,7 @@ def musicfans(request):
                 'author_link': dto['author_link'],
                 'categories': dto['categories'],
                 'responses': dto['responses'],
+                'entities': dto['entities'],
             }
             result.append(json_data)
     else:
