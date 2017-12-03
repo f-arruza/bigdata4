@@ -214,7 +214,7 @@ class HastagsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HastagsView, self).get_context_data(**kwargs)
-        context['hashtags'] = db['hashtags'].find({})
+        context['hashtags'] = db['hashtags'].find({}).limit(1000).sort('count', -1)
         return context
 
 
@@ -223,7 +223,7 @@ class LocationsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(LocationsView, self).get_context_data(**kwargs)
-        context['locations'] = db['locations'].find({}).sort('count', -1)
+        context['locations'] = db['locations'].find({}).limit(1000).sort('count', -1)
         return context
 
 
@@ -232,5 +232,5 @@ class QuotesView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(QuotesView, self).get_context_data(**kwargs)
-        context['quotes'] = db['quotes'].find({}).sort('count', -1)
+        context['quotes'] = db['quotes'].find({}).limit(1000).sort('count', -1)
         return context

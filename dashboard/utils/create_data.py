@@ -77,7 +77,7 @@ if __name__ == "__main__":
     client = MongoClient('localhost', 27017)
     db = client.taller04
 
-    # Summary
+    '''# Summary
     total_TW = db.tweets.count({})
     total_RT = db.tweets.count({'payload':{'$regex':'^RT'}})
 
@@ -158,10 +158,10 @@ if __name__ == "__main__":
         "total_quotes" : len(qts),
     }
     print(data)
-    dto_id = db.summary.insert_one(data).inserted_id
+    dto_id = db.summary.insert_one(data).inserted_id'''
 
     # Topics & Polarity
-    '''tweets_tp = db.tweets.find({}, {'polarity_id': 1, '_id': 0})
+    tweets_tp = db.tweets.find({}, {'polarity_id': 1, '_id': 0})
     polarities = {}
     for data in tweets_tp:
         append_value_to_dict(polarities, data['polarity_id'])
@@ -174,4 +174,4 @@ if __name__ == "__main__":
             "polarity" : polarity,
             "count" : value,
         }
-        db.polarities.insert_one(data)'''
+        db.polarities.insert_one(data)

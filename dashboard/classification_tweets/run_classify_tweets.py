@@ -3,7 +3,7 @@ import pickle
 from pymongo import MongoClient
 
 import sys
-sys.path.append('../')
+# sys.path.append('../')
 from classify_tweets import *
 
 if __name__ == "__main__":
