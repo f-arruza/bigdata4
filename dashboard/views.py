@@ -1,5 +1,6 @@
 # coding: utf-8
 import json
+import numpy
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from pymongo import MongoClient
@@ -23,9 +24,13 @@ def summary(request):
         total_request_musicfans = dto['request_count']
         total_response_musicfans = dto['response_count']
 
+    perc_tweets_en = numpy.around((data['total_tweets_en'] / data['total_tweets']) * 100, 2)
+    perc_tweets_es = numpy.around((data['total_tweets_es'] / data['total_tweets']) * 100, 2)
     json_data = {
         'total_tweets': data['total_tweets'],
         'total_rts': data['total_rts'],
+        'perc_tweets_en' : perc_tweets_en,
+        'perc_tweets_es' : perc_tweets_es,
         'total_accounts': data['total_accounts'],
         'total_hashtags': data['total_hashtags'],
         'total_quotes': data['total_quotes'],

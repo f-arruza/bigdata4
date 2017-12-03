@@ -42,7 +42,7 @@
           </div>
           <hr>
           <div class="row">
-            <div class="col-xs-6 col-sm-4">
+            <div class="col-xs-6 col-sm-3">
               <div class="pull-left">
                 <div class="icon icon ion-social-twitter" style="background-color: #2574ab; padding: 7px 15px;"></div>
               </div>
@@ -51,7 +51,7 @@
                 <h3 id="total_tweets"></h3>
               </div>
             </div>
-            <div class="col-xs-6 col-sm-4">
+            <div class="col-xs-6 col-sm-3">
               <div class="pull-left">
                 <div class="icon fa fa-retweet" style="background-color: #259dab; padding: 7px 10px;"></div>
               </div>
@@ -60,19 +60,37 @@
                 <h3 id="total_rts"></h3>
               </div>
             </div>
+            <div class="col-xs-6 col-sm-3">
+              <div class="pull-left">
+                <div class="icon fa fa-language" style="background-color: #9d70e2; padding: 7px 10px;"></div>
+              </div>
+              <div class="pull-left">
+                <h4 class="panel-title">En Inglés</h4>
+                <h3 id="perc_tweets_en"></h3>
+              </div>
+            </div>
+            <div class="col-xs-6 col-sm-3">
+              <div class="pull-left">
+                <div class="icon fa fa-language" style="background-color: #9d70e2; padding: 7px 10px;"></div>
+              </div>
+              <div class="pull-left">
+                <h4 class="panel-title">En Español</h4>
+                <h3 id="perc_tweets_es"></h3>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
             <div class="col-xs-6 col-sm-4">
               <div class="pull-left">
-                <div class="icon icon ion-person" style="background-color: #9d70e2; padding: 7px 18px;"></div>
+                <div class="icon icon ion-person" style="background-color: #259dab; padding: 7px 18px;"></div>
               </div>
               <div class="pull-left">
                 <h4 class="panel-title">Cuentas Involucradas</h4>
                 <h3 id="total_accounts"></h3>
               </div>
             </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-xs-6 col-sm-6">
+            <div class="col-xs-6 col-sm-4">
               <div class="pull-left">
                 <div class="icon icon ion-pound" style="background-color: #e27c79; padding: 7px 16px;"></div>
               </div>
@@ -81,7 +99,7 @@
                 <h3 id="total_hashtags"></h3>
               </div>
             </div>
-            <div class="col-xs-6 col-sm-6">
+            <div class="col-xs-6 col-sm-4">
               <div class="pull-left">
                 <div class="icon icon ion-at" style="background-color: #488dd8; padding: 7px 14px;"></div>
               </div>
@@ -167,8 +185,11 @@
   $(document).ready(function(){
     $.get('/summary', function(data){
       var total = data.total_tweets;
-      for(item in data){
-        $("#"+item).text(data[item]);
+      for(item in data) {
+        if(item == 'perc_tweets_en' || item == 'perc_tweets_es')
+          $("#"+item).text(data[item] + '%');
+        else
+          $("#"+item).text(data[item]);
       }
     });
   });

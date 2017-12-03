@@ -9,3 +9,4 @@ tweepy==3.5.0
 sklearn
 feedparser
 spotipy
+SPARQLWrapper
