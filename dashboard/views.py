@@ -243,6 +243,29 @@ def persons(request):
     return HttpResponse(json.dumps(result, ensure_ascii=False).encode('utf-8'),
                         content_type="application/json; charset=utf-8")
 
+def persons_spotify(request):
+    topic_id = request.GET.get('topic_id')
+    if (topic_id is not None):
+        try:
+            data = db['persons_spotify'].find({ 'topic_id' : ObjectId(topic_id) })
+            result = []
+            for dt in data:
+                result.append({
+                    'name' : dt['name'],
+                    'popularity' : dt['popularity'],
+                    'type' : dt['type'],
+                    'url' : dt['url'],
+                    'followers' : dt['followers'],
+                    'genres' : dt['genres'],
+                    'images' :dt['images'],
+                })
+        except:
+            result = 'topic_id incorrect.'
+    else:
+        result = 'topic_id parameter not found.'
+    return HttpResponse(json.dumps(result, ensure_ascii=False).encode('utf-8'),
+                        content_type="application/json; charset=utf-8")
+
 def organizations(request):
     topic_id = request.GET.get('topic_id')
     if (topic_id is not None):

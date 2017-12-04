@@ -153,25 +153,25 @@ def enrich_data(topic_id, data):
         # Person
         if type.startswith('Top>Person>'):
             dto = db.persons.find({'topic_id' : topic_id, 'data.name' : ent_title['form']})
-            # if dto.count() == 0:
-            #     person_data = search_person(ent_title['form'])
-            #     if person_data is not None:
-            #         db.persons.insert_one({
-            #             'topic_id' : topic_id,
-            #             'source' : 'dbpedia',
-            #             'data' : person_data
-            #         })
+            if dto.count() == 0:
+                person_data = search_person(ent_title['form'])
+                if person_data is not None:
+                    db.persons.insert_one({
+                        'topic_id' : topic_id,
+                        'source' : 'dbpedia',
+                        'data' : person_data
+                    })
         # Organization
         if type.startswith('Top>Organization>'):
             dto = db.organizations.find({'topic_id' : topic_id, 'data.name' : ent_title['form']})
-            # if dto.count() == 0:
-            #     org_data = search_organization(ent_title['form'])
-            #     if org_data is not None:
-            #         db.organizations.insert_one({
-            #             'topic_id' : topic_id,
-            #             'source' : 'dbpedia',
-            #             'data' : org_data
-            #         })
+            if dto.count() == 0:
+                org_data = search_organization(ent_title['form'])
+                if org_data is not None:
+                    db.organizations.insert_one({
+                        'topic_id' : topic_id,
+                        'source' : 'dbpedia',
+                        'data' : org_data
+                    })
         # Location
         if type.startswith('Top>Location>'):
             dto = db.locations_ent.find({'topic_id' : topic_id, 'data.name' : ent_title['form']})
@@ -193,23 +193,23 @@ def enrich_data(topic_id, data):
             dto = db.persons.find({'topic_id' : topic_id, 'data.name' : ent_title['form']})
             if dto.count() == 0:
                 person_data = search_person(ent_title['form'])
-                # if person_data is not None:
-                #     db.persons.insert_one({
-                #         'topic_id' : topic_id,
-                #         'source' : 'dbpedia',
-                #         'data' : person_data
-                #     })
+                if person_data is not None:
+                    db.persons.insert_one({
+                        'topic_id' : topic_id,
+                        'source' : 'dbpedia',
+                        'data' : person_data
+                    })
         # Organization
         if type.startswith('Top>Organization>'):
             dto = db.organizations.find({'topic_id' : topic_id, 'data.name' : ent_title['form']})
-            # if dto.count() == 0:
-            #     org_data = search_organization(ent_title['form'])
-            #     if org_data is not None:
-            #         db.organizations.insert_one({
-            #             'topic_id' : topic_id,
-            #             'source' : 'dbpedia',
-            #             'data' : org_data
-            #         })
+            if dto.count() == 0:
+                org_data = search_organization(ent_title['form'])
+                if org_data is not None:
+                    db.organizations.insert_one({
+                        'topic_id' : topic_id,
+                        'source' : 'dbpedia',
+                        'data' : org_data
+                    })
         # Location
         if type.startswith('Top>Location>'):
             dto = db.locations_ent.find({'topic_id' : topic_id, 'data.name' : ent_title['form']})
