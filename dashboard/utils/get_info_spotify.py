@@ -3,8 +3,7 @@ import os
 import spotipy
 from pymongo import MongoClient
 
-# token = os.environ['SPOTIFY_TOKEN']
-token = 'BQCvsdos2wrbLJQqZXYQ_IlmKaqkaYdJqv8KZP66wVY_kjAEG3h-5AzZ-9K6Acjvpqc0ymSaPVKj87JpFqy_kOEP5Eu2hBBmpdRFCltLNFwAF7rG8TOE7FIuJA5OxRGKTS0JSWV6MiZxcog'
+token = os.environ['SPOTIFY_TOKEN']
 sp = spotipy.Spotify(auth=token)
 
 def show_artist_albums(artist_id):
