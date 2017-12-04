@@ -3,8 +3,23 @@ import os
 import spotipy
 from pymongo import MongoClient
 
-token = os.environ['SPOTIFY_TOKEN']
+# token = os.environ['SPOTIFY_TOKEN']
+token = 'BQCvsdos2wrbLJQqZXYQ_IlmKaqkaYdJqv8KZP66wVY_kjAEG3h-5AzZ-9K6Acjvpqc0ymSaPVKj87JpFqy_kOEP5Eu2hBBmpdRFCltLNFwAF7rG8TOE7FIuJA5OxRGKTS0JSWV6MiZxcog'
 sp = spotipy.Spotify(auth=token)
+
+def show_artist_albums(artist_id):
+    albums = []
+    results = sp.artist_albums(artist_id, album_type='album')
+
+    for album in results['items']:
+        data_json = {
+            'album_id' : album['id'],
+            'name' : album['name'],
+            'url' : album['external_urls']['spotify'],
+            'images' : album['images'],
+        }
+        albums.append(data_json)
+    return albums
 
 if __name__ == "__main__":
     client = MongoClient('localhost', 27017)
@@ -18,6 +33,7 @@ if __name__ == "__main__":
         for artist in result['artists']['items']:
             data_json = {
                 'topic_id' : person['topic_id'],
+                'artist_id' : artist['id'],
                 'name' : artist['name'],
                 'popularity' : artist['popularity'],
                 'type' : artist['type'],
@@ -29,5 +45,9 @@ if __name__ == "__main__":
             for imag in artist['images']:
                 images.append(imag['url'])
             data_json['images'] = images
+
+            # Albums
+            albums = show_artist_albums(artist['id'])
+            data_json['albums'] = albums
 
             db.persons_spotify.insert_one(data_json)

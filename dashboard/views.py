@@ -251,13 +251,15 @@ def persons_spotify(request):
             result = []
             for dt in data:
                 result.append({
+                    'artist_id' : dt['artist_id'],
                     'name' : dt['name'],
                     'popularity' : dt['popularity'],
                     'type' : dt['type'],
                     'url' : dt['url'],
                     'followers' : dt['followers'],
                     'genres' : dt['genres'],
-                    'images' :dt['images'],
+                    'images' : dt['images'],
+                    'albums' : dt['albums'],
                 })
         except:
             result = 'topic_id incorrect.'
