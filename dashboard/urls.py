@@ -4,12 +4,13 @@ from .views import (
     IndexView, TweetsView, AccountsView, HastagsView, musicfans, persons,
     summary, accounts, hashtags, locations, quotes, polarities, tweets,
     LocationsView, QuotesView, PolaritiesView, organizations, locations_ent,
-    musicfans_by_id, persons_spotify, search_tweets
+    musicfans_by_id, persons_spotify, search_tweets, search
 )
 
 urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^summary/$', summary, name='summary'),
+    url(r'^search/$', search, name='search'),
     url(r'^accounts/$', accounts, name='accounts'),
     url(r'^hashtags/$', hashtags, name='hashtags'),
     url(r'^locations/$', locations, name='locations'),
