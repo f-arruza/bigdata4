@@ -4,7 +4,7 @@ from .views import (
     IndexView, TweetsView, AccountsView, HastagsView, musicfans, persons,
     summary, accounts, hashtags, locations, quotes, polarities, tweets,
     LocationsView, QuotesView, PolaritiesView, organizations, locations_ent,
-    musicfans_by_id, persons_spotify
+    musicfans_by_id, persons_spotify, search_tweets
 )
 
 urlpatterns = [
@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^quotes/$', quotes, name='quotes'),
     url(r'^polarities/$', polarities, name='polarities'),
     url(r'^tweets/$', tweets, name='tweets'),
+    url(r'^tweets/search/$', search_tweets, name='search_tweets'),
     url(r'^musicfans/$', musicfans, name='musicfans'),
     url(r'^musicfans/(?P<topic_id>\w+)/$', musicfans_by_id, name='musicfans_by_id'),
     url(r'^persons/$', persons, name='persons'),
