@@ -10,26 +10,25 @@
 
   <ol class="breadcrumb breadcrumb-quirk">
     <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
-    <li class="active">Listado de Hashtags</li>
+    <li class="active">Listado de Temas Musicfans</li>
   </ol>
   <div class="panel">
     <div class="panel-heading">
-      <h4 class="panel-title">Listado Completo de Topicos</h4>
-      <p>Se realizó la extracción de más de 40 mil tweets de las cuentas más relevantes de los temas solicitados.</p>
+      <h4 class="panel-title">Listado Completo de Temas</h4>
+      <p>Se realizó la extracción de fuentes RSS del portal Musicfans.</p>
     </div>
     <div class="panel-body">
       <div class="table-responsive">
         <table id="dataTable1" class="table table-bordered table-striped-col">
           <thead>
             <tr>
-              <th>Titulo</th>
+              <th>Título</th>
               <th>Fecha Publicación</th>
               <th>Autor</th>
               <th>Respuestas</th>
               <th></th>
             </tr>
           </thead>
-
           <tfoot>
             <tr>
               <th>Título</th>
@@ -39,7 +38,6 @@
               <th></th>
             </tr>
           </tfoot>
-
           <tbody>
             {% for topic in topics %}
             <tr>
@@ -55,10 +53,8 @@
       </div>
     </div>
   </div>
-
 </div>
 {% endblock %}
-
 {% block js %}
 <script src="{% static "dashboard/lib/datatables/jquery.dataTables.js" %}"></script>
 <script src="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.js" %}"></script>

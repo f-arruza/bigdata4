@@ -10,8 +10,8 @@ from bson.objectid import ObjectId
 from pymongo import MongoClient
 
 # Create your views here.
-client = MongoClient('localhost', 27017)
-db = client['taller04']
+client = MongoClient('172.24.99.98', 27017)
+db = client['Grupo01_taller04']
 
 class IndexView(TemplateView):
     template_name = 'dashboard/index.html'

@@ -12,12 +12,12 @@
 
   <ol class="breadcrumb breadcrumb-quirk">
     <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
-    <li><a href="{% url 'topics-view'%}"><i class="fa fa-alert"></i> Topicos</a></li>
-    <li class="active">Detalle de Tópico</li>
+    <li><a href="{% url 'topics-view'%}"><i class="fa fa-alert"></i>Temas Musicfans</a></li>
+    <li class="active">Detalle del Tema</li>
   </ol>
   <div class="panel">
     <div class="panel-heading">
-      <h4 class="panel-title">Detalle de Tópico</h4>
+      <h4 class="panel-title">Detalle de Tema</h4>
     </div>
     <div class="panel-body">
       <div id="donut-summary" class="body-chart"></div>
@@ -31,9 +31,9 @@
                 </a>
               </div>
               <div class='media-body'>
-                <h4 class='media-heading nomargin'><a target='_blank' href='{{topic.link}}'>{{topic.title}}</a></h4>
-                <span>Fecha de publicación: <strong>{{topic.pubdate}}</strong></span><br>
-                <span>Autor: <strong><a target='_blank' href='{{topic.author_link}}'>{{topic.author}}</a></strong></span><br>
+                <h4 class='media-heading nomargin'><a target='_blank' href='{{topic.link}}'>{{topic.title}}</a></h4><br>
+                <span>Fecha de publicación: <strong>{{topic.pubdate}}</strong></span><br><br>
+                <span>Autor: <strong><a target='_blank' href='{{topic.author_link}}'>{{topic.author}}</a></strong></span><br><br>
                 {% for category in topic.categories %}
                   <span class="label label-primary">{{category}}</span>
                 {% endfor %}
@@ -56,10 +56,10 @@
                 </div>
                 {% endfor %}
                 <ul class="nav nav-tabs">
+                  <li class="active"><a data-toggle="tab" href="#locations">Lugares</a></li>
                   <li><a data-toggle="tab" href="#artists">Artistas</a></li>
                   <li><a data-toggle="tab" href="#persons">Personas</a></li>
                   <li><a data-toggle="tab" href="#organizations">Organizaciones</a></li>
-                  <li class="active"><a data-toggle="tab" href="#locations">Lugares</a></li>
                 </ul>
                 <div class="tab-content">
                   <div id="artists" class="tab-pane fade">
