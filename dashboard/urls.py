@@ -4,7 +4,7 @@ from .views import (
     IndexView, TweetsView, AccountsView, HastagsView, musicfans, persons,
     summary, accounts, hashtags, locations, quotes, polarities, tweets,
     LocationsView, QuotesView, PolaritiesView, organizations, locations_ent,
-    musicfans_by_id, persons_spotify
+    musicfans_by_id, persons_spotify, TopicsView, TopicDetailView,
 )
 
 urlpatterns = [
@@ -47,5 +47,15 @@ urlpatterns = [
         r'^ver-citas/$',
         QuotesView.as_view(),
         name='quotes-view'
+    ),
+    url(
+        r'^ver-topicos/$',
+        TopicsView.as_view(),
+        name='topics-view'
+    ),
+    url(
+        r'^detalle-topico/(?P<id>[-_\w]+)/$',
+        TopicDetailView.as_view(),
+        name='topic-detail-view'
     ),
 ]

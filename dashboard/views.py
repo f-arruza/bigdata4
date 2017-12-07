@@ -345,3 +345,33 @@ class QuotesView(TemplateView):
         context = super(QuotesView, self).get_context_data(**kwargs)
         context['quotes'] = db['quotes'].find({}).limit(1000).sort('count', -1)
         return context
+
+
+class TopicsView(TemplateView):
+    template_name = 'dashboard/topics.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TopicsView, self).get_context_data(**kwargs)
+        topics = db['musicfans_topics'].find({})
+        data_topics = []
+        for topic in topics:
+            data_topics.append({
+                'id': topic['_id'],
+                'title': topic['title'],
+                'pubdate': topic['pubdate'],
+                'author': topic['author'],
+                'responses': topic['responses']
+            })
+        context['topics'] = data_topics
+
+        return context
+
+
+class TopicDetailView(TemplateView):
+    template_name = 'dashboard/topic_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TopicDetailView, self).get_context_data(**kwargs)
+        context['topic'] = db['musicfans_topics'].find_one({"_id": ObjectId(self.kwargs['id'])})
+        context['topic_id'] = self.kwargs['id']
+        return context

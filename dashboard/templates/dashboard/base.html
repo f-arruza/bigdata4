@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="{% static "dashboard/lib/weather-icons/css/weather-icons.css" %}">
   <link rel="stylesheet" href="{% static "dashboard/lib/ionicons/css/ionicons.css" %}">
   <link rel="stylesheet" href="{% static "dashboard/css/quirk.css" %}">
+  <link rel="stylesheet" href="{% static "dashboard/css/main.css" %}">
   <script src="{% static "dashboard/lib/modernizr/modernizr.js" %}"></script>
 
   {% block css %}
@@ -49,6 +50,7 @@
         <div class="tab-pane active" id="mainmenu">
           <ul class="nav nav-pills nav-stacked nav-quirk">
             <li class="active"><a href="{% url 'index' %} "><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
+            <li class="active"><a href="{% url 'topics-view' %} "><i class="icon icon ion-alert"></i> <span>Tópicos</span></a></li>
             <li class="active"><a href="{% url 'polarities-view' %} "><i class="icon ion-ios-pulse-strong"></i> <span>Análisis de Polaridades</span></a></li>
             <li class="active"><a href="{% url 'accounts-view' %} "><i class="icon ion-person-stalker"></i> <span>Cuentas Involucradas</span></a></li>
             <li class="active"><a href="{% url 'hashtags-view' %} "><i class="icon icon ion-pound"></i> <span>Listado de Hashtags</span></a></li>

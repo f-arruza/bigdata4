@@ -10,122 +10,62 @@
 
   <ol class="breadcrumb breadcrumb-quirk">
     <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
-    <li class="active">Análisis de Temas</li>
+    <li class="active">Listado de Hashtags</li>
   </ol>
   <div class="panel">
     <div class="panel-heading">
-      <h4 class="panel-title">Resumen de Temas</h4>
-      <p>Los temas encontrados en el dataset son:</p>
+      <h4 class="panel-title">Listado Completo de Topicos</h4>
+      <p>Se realizó la extracción de más de 40 mil tweets de las cuentas más relevantes de los temas solicitados.</p>
     </div>
     <div class="panel-body">
-      <div id="donut-topics" class="body-chart"></div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-3">
-      <div class="panel">
-        <div class="panel-heading">
-          <h4 class="panel-title">Polaridad de "Otros"</h4>
-        </div>
-        <div class="panel-body">
-          <div id="donut-otro" class="body-chart"></div>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-3">
-      <div class="panel">
-        <div class="panel-heading">
-          <h4 class="panel-title">Polaridad de "Proceso de paz"</h4>
-        </div>
-        <div class="panel-body">
-          <div id="donut-proceso" class="body-chart"></div>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-3">
-      <div class="panel">
-        <div class="panel-heading">
-          <h4 class="panel-title">Polaridad de "Elecciones"</h4>
-        </div>
-        <div class="panel-body">
-          <div id="donut-electoral" class="body-chart"></div>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-3">
-      <div class="panel">
-        <div class="panel-heading">
-          <h4 class="panel-title">Polaridad de "Corrupción"</h4>
-        </div>
-        <div class="panel-body">
-          <div id="donut-currupcion" class="body-chart"></div>
-        </div>
+      <div class="table-responsive">
+        <table id="dataTable1" class="table table-bordered table-striped-col">
+          <thead>
+            <tr>
+              <th>Titulo</th>
+              <th>Fecha Publicación</th>
+              <th>Autor</th>
+              <th>Respuestas</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tfoot>
+            <tr>
+              <th>Título</th>
+              <th>Fecha Publicación</th>
+              <th>Autor</th>
+              <th>Respuestas</th>
+              <th></th>
+            </tr>
+          </tfoot>
+
+          <tbody>
+            {% for topic in topics %}
+            <tr>
+              <td>{{topic.title}}</td>
+              <td>{{topic.pubdate}}</td>
+              <td>{{topic.author}}</td>
+              <td>{{topic.responses|length}}</td>
+              <td><a href="{% url 'topic-detail-view' topic.id %}" class="btn btn-success">Ver Detalle</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+
 </div>
 {% endblock %}
 
 {% block js %}
-<script src="{% static "dashboard/lib/morrisjs/morris.js" %}"></script>
-<script src="{% static "dashboard/lib/raphael/raphael.js" %}"></script>
+<script src="{% static "dashboard/lib/datatables/jquery.dataTables.js" %}"></script>
+<script src="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.js" %}"></script>
 <script>
 $(document).ready(function() {
   'use strict';
-  $.get('/topics?offset=0&limit=10', function(topics){
-    new Morris.Donut({
-       element: 'donut-topics',
-       data: [
-         {label: topics[0].topic, value: topics[0].count},
-         {label: topics[1].topic, value: topics[1].count},
-         {label: topics[2].topic, value: topics[2].count},
-         {label: topics[3].topic, value: topics[3].count}
-       ],
-       colors: ['#D9534F','#1CAF9A','#428BCA','#5BC0DE']
-    });
-    new Morris.Donut({
-       element: 'donut-otro',
-       data: [
-         {label: topics[0].polarities[0].polarity, value: topics[0].polarities[0].count},
-         {label: topics[0].polarities[1].polarity, value: topics[0].polarities[1].count},
-         {label: topics[0].polarities[2].polarity, value: topics[0].polarities[2].count},
-         {label: topics[0].polarities[3].polarity, value: topics[0].polarities[3].count},
-         {label: topics[0].polarities[4].polarity, value: topics[0].polarities[4].count}
-       ],
-       colors: ['#D9534F','#1CAF9A','#428BCA','#5BC0DE','#428BCA']
-    });
-    new Morris.Donut({
-       element: 'donut-proceso',
-       data: [
-         {label: topics[1].polarities[0].polarity, value: topics[1].polarities[0].count},
-         {label: topics[1].polarities[1].polarity, value: topics[1].polarities[1].count},
-         {label: topics[1].polarities[2].polarity, value: topics[1].polarities[2].count},
-         {label: topics[1].polarities[3].polarity, value: topics[1].polarities[3].count},
-         {label: topics[1].polarities[4].polarity, value: topics[1].polarities[4].count}
-       ],
-       colors: ['#D9534F','#1CAF9A','#428BCA','#5BC0DE','#428BCA']
-    });
-    new Morris.Donut({
-       element: 'donut-electoral',
-       data: [
-         {label: topics[2].polarities[0].polarity, value: topics[2].polarities[0].count},
-         {label: topics[2].polarities[1].polarity, value: topics[2].polarities[1].count},
-         {label: topics[2].polarities[2].polarity, value: topics[2].polarities[2].count},
-         {label: topics[2].polarities[3].polarity, value: topics[2].polarities[3].count}
-       ],
-       colors: ['#D9534F','#1CAF9A','#428BCA','#5BC0DE']
-    });
-    new Morris.Donut({
-       element: 'donut-currupcion',
-       data: [
-         {label: topics[3].polarities[0].polarity, value: topics[3].polarities[0].count},
-         {label: topics[3].polarities[1].polarity, value: topics[3].polarities[1].count},
-         {label: topics[3].polarities[2].polarity, value: topics[3].polarities[2].count},
-         {label: topics[3].polarities[3].polarity, value: topics[3].polarities[3].count}
-       ],
-       colors: ['#D9534F','#1CAF9A','#428BCA','#5BC0DE']
-    });
-  });
+  $('#dataTable1').DataTable({"order": [[ 1, "desc" ]]});
 });
 </script>
 {% endblock %}

@@ -1,0 +1,178 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" %}">
+  <link rel="stylesheet" href="{% static "dashboard/css/leaflet.css" %}">
+  <script src="{% static "dashboard/js/leaflet.js" %}"></script>
+{% endblock %}
+
+{% block main %}
+<div class="contentpanel">
+
+  <ol class="breadcrumb breadcrumb-quirk">
+    <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
+    <li><a href="{% url 'topics-view'%}"><i class="fa fa-alert"></i> Topicos</a></li>
+    <li class="active">Detalle de Tópico</li>
+  </ol>
+  <div class="panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">Detalle de Tópico</h4>
+    </div>
+    <div class="panel-body">
+      <div id="donut-summary" class="body-chart"></div>
+      <div class="col-md-12 col-lg-12 dash-right">
+        <div class="row">
+          <ul class="col-sm-12" id="perfil">
+            <li class='media col-sm-12'>
+              <div class='media-left'>
+                <a href='#'>
+                  <img class='media-object img-circle' src='{{user.image}}' alt=''>
+                </a>
+              </div>
+              <div class='media-body'>
+                <h4 class='media-heading nomargin'><a target='_blank' href='{{topic.link}}'>{{topic.title}}</a></h4>
+                <span>Fecha de publicación: <strong>{{topic.pubdate}}</strong></span><br>
+                <span>Autor: <strong><a target='_blank' href='{{topic.author_link}}'>{{topic.author}}</a></strong></span><br>
+                {% for category in topic.categories %}
+                  <span class="label label-primary">{{category}}</span>
+                {% endfor %}
+                <p>{{topic.description|safe}}</p>
+                {% for response in topic.responses %}
+                <div class="panel-group" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}">{{response.title}}</a>
+                      </h4>
+                    </div>
+                    <div id="collapse{{forloop.counter}}" class="panel-collapse collapse">
+                      <div class="panel-body">
+                        <span>Fecha de publicación: <strong>{{response.pubdate}}</strong></span><br>
+                        <p>{{response.summary|safe}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                <ul class="nav nav-tabs">
+                  <li><a data-toggle="tab" href="#artists">Artistas</a></li>
+                  <li><a data-toggle="tab" href="#persons">Personas</a></li>
+                  <li><a data-toggle="tab" href="#organizations">Organizaciones</a></li>
+                  <li class="active"><a data-toggle="tab" href="#locations">Lugares</a></li>
+                </ul>
+                <div class="tab-content">
+                  <div id="artists" class="tab-pane fade">
+                    <h3>Artistas</h3>
+                    <ul class="media-list user-list" id="artists_container">
+                    </ul>
+                  </div>
+                  <div id="persons" class="tab-pane fade">
+                    <h3>Personas</h3>
+                    <ul class="media-list user-list" id="persons_container">
+                    </ul>
+                  </div>
+                  <div id="organizations" class="tab-pane fade">
+                    <h3>Organizaciones</h3>
+                    <ul class="media-list user-list" id="organizations_container">
+                    </ul>
+                  </div>
+                  <div id="locations" class="tab-pane fade in active">
+                    <h3>Lugares</h3>
+                    <div id="mapid" style="height: 400px;"></div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<input type="hidden" value="{{topic_id}}" id="topic_id">
+{% endblock %}
+
+{% block js %}
+<script src="{% static "dashboard/lib/datatables/jquery.dataTables.js" %}"></script>
+<script src="{% static "dashboard/lib/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.js" %}"></script>
+<script src="{% static "dashboard/lib/morrisjs/morris.js" %}"></script>
+<script src="{% static "dashboard/lib/raphael/raphael.js" %}"></script>
+<script>
+$(document).ready(function() {
+  'use strict';
+
+  var map = L.map('mapid').setView([4.5048522, -75.8060487 ], 3);
+
+  var mapbox = L.tileLayer('https://api.mapbox.com/styles/v1/josedeweb/cj9a1i07g2z8m2smvx2ttqcml/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoiam9zZWRld2ViIiwiYSI6ImxKbzA2OUkifQ.pd8n2FOQbRduWCgc02gSWQ', {
+      attribution: 'Taller 4 - Bigdata &copy Uniandes',
+      maxZoom: 18
+  }).addTo(map);
+
+  $('#dataTable1').DataTable({"order": [[ 1, "desc" ]]});
+
+  $.get('/persons?topic_id='+$("#topic_id").val(), function(data){
+    $("#persons_container").html('');
+    data.forEach(function(user){
+      var person_profile = "<li class='media col-sm-4'>\
+        <div class='media-body'>\
+          <h4 class='media-heading nomargin'><a target='_blank' href='" + user.data.page + "'>" + user.data.name +"</a></h4>\
+          Sexo: <span>" + user.data.gender + "</span><br>\
+          Fuente: <span>" + user.source +"</span><br>\
+          Ocupaciones: <span>" + user.data.occupations + "</span><br>\
+          Géneros: <span>" + user.data.genre + "</span><br>\
+          Lugar de nacimiento: <span>" + user.data.birthplace + "</span><br>\
+          Fecha de nacimiento: <span>" + user.data.birthdate + "</span><br>\
+          Lugar de muerte: <span>" + user.data.deathplace + "</span><br>\
+          Fecha de muerte: <span>" + user.data.deathdate + "</span><br>\
+        </div>\
+      </li>";
+      $("#persons_container").append(person_profile);
+    });
+  });
+
+  $.get('/organizations?topic_id='+$("#topic_id").val(), function(data){
+    $("#organizations_container").html('');
+    data.forEach(function(organization){
+      var organization_profile = "<li class='media col-sm-12'>\
+        <div class='media-body'>\
+          <h4 class='media-heading nomargin'><a target='_blank' href='" + organization.data.page + "'>" + organization.data.name + " - " +organization.data.fullname +"</a></h4>\
+          Tipo: <span>" + organization.data.type + "</span><br>\
+          País: <span>" + organization.data.country +"</span><br>\
+          Abstract: <span>" + organization.data.abstract + "</span><br>\
+          Servicios: <span>" + organization.data.services + "</span><br>\
+          Lugares: <span>" + organization.data.places + "</span><br>\
+          Personas: <span>" + organization.data.persons + "</span><br>\
+        </div>\
+      </li>";
+      $("#organizations_container").append(organization_profile);
+    });
+  });
+
+  $.get('/persons_spotify?topic_id='+$("#topic_id").val(), function(data){
+    $("#artists_container").html('');
+    data.forEach(function(artist){
+      var artist = "<li class='media col-sm-12'>\
+      <div class='media-left'>\
+        <a href='#'>\
+          <img class='media-object img-circle' src='" + artist.images[0] + "' alt=''>\
+        </a>\
+      </div>\
+        <div class='media-body'>\
+          <h4 class='media-heading nomargin'><a target='_blank' href='" + artist.url + "'>" + artist.name +"</a></h4>\
+          \
+          Seguidores: <span>" + artist.followers + "</span><br>\
+          Popularidad: <span>" + artist.popularity + "</span><br>\
+          Géneros: <span>" + artist.genres + "</span><br>\
+        </div>\
+      </li>";
+      $("#artists_container").append(artist);
+    });
+  });
+
+    // $.get('/locations?topic_id='+$("#topic_id").val(), function(data){
+    //
+    // });
+});
+</script>
+{% endblock %}
