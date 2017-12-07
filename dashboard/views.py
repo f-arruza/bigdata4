@@ -1,6 +1,7 @@
 # coding: utf-8
 import json
 import numpy
+import requests
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import HttpResponse
@@ -375,3 +376,65 @@ class TopicDetailView(TemplateView):
         context['topic'] = db['musicfans_topics'].find_one({"_id": ObjectId(self.kwargs['id'])})
         context['topic_id'] = self.kwargs['id']
         return context
+
+def search_tweets(request):
+    query = request.GET.get('query')
+    start = request.GET.get('start')
+    limit = request.GET.get('limit')
+
+    if (start is None):
+        start = 0
+    if (limit is None):
+        limit = 10
+    if (query is None):
+        q = '*:*'
+    else:
+        q = ''
+        qparams = query.split(' ')
+        print(qparams)
+        for param in qparams:
+            condition = 'payload:*' + param + '*'
+            if q == '':
+                q = condition
+            else:
+                q = q + ' or ' + condition
+        if q != '':
+            q = '(' + q + ')'
+
+    url = 'http://172.24.100.95:8084/solr/tweets/select?q={}&rows={}&start={}'
+    url = url.format(q, limit, start)
+    response = requests.get(url)
+    return HttpResponse(json.dumps(response.json()['response']['docs'],
+                                   ensure_ascii=False).encode('utf-8'),
+                        content_type="application/json; charset=utf-8")
+
+def search(request):
+    query = request.GET.get('query')
+    start = request.GET.get('start')
+    limit = request.GET.get('limit')
+
+    if (start is None):
+        start = 0
+    if (limit is None):
+        limit = 10
+    if (query is None):
+        q = '*:*'
+    else:
+        q = ''
+        qparams = query.split(' ')
+        print(qparams)
+        for param in qparams:
+            condition = 'payload:*' + param + '*'
+            if q == '':
+                q = condition
+            else:
+                q = q + ' or ' + condition
+        if q != '':
+            q = '(' + q + ')'
+
+    url = 'http://172.24.100.95:8084/solr/musicfans/select?q={}&rows={}&start={}'
+    url = url.format(q, limit, start)
+    response = requests.get(url)
+    return HttpResponse(json.dumps(response.json()['response']['docs'],
+                                   ensure_ascii=False).encode('utf-8'),
+                        content_type="application/json; charset=utf-8")

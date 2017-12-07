@@ -5,17 +5,20 @@ from .views import (
     summary, accounts, hashtags, locations, quotes, polarities, tweets,
     LocationsView, QuotesView, PolaritiesView, organizations, locations_ent,
     musicfans_by_id, persons_spotify, TopicsView, TopicDetailView,
+    search_tweets, search,
 )
 
 urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^summary/$', summary, name='summary'),
+    url(r'^search/$', search, name='search'),
     url(r'^accounts/$', accounts, name='accounts'),
     url(r'^hashtags/$', hashtags, name='hashtags'),
     url(r'^locations/$', locations, name='locations'),
     url(r'^quotes/$', quotes, name='quotes'),
     url(r'^polarities/$', polarities, name='polarities'),
     url(r'^tweets/$', tweets, name='tweets'),
+    url(r'^tweets/search/$', search_tweets, name='search_tweets'),
     url(r'^musicfans/$', musicfans, name='musicfans'),
     url(r'^musicfans/(?P<topic_id>\w+)/$', musicfans_by_id, name='musicfans_by_id'),
     url(r'^persons/$', persons, name='persons'),
