@@ -31,19 +31,21 @@
                 </a>
               </div>
               <div class='media-body'>
+                <h4 class="panel-title">Pregunta</h4></br>
                 <h4 class='media-heading nomargin'><a target='_blank' href='{{topic.link}}'>{{topic.title}}</a></h4><br>
                 <span>Fecha de publicación: <strong>{{topic.pubdate}}</strong></span><br><br>
                 <span>Autor: <strong><a target='_blank' href='{{topic.author_link}}'>{{topic.author}}</a></strong></span><br><br>
                 {% for category in topic.categories %}
                   <span class="label label-primary">{{category}}</span>
                 {% endfor %}
-                <p>{{topic.description|safe}}</p>
+                <p>{{topic.description|safe}}</p></br>
+                <h4 class="panel-title">Respuestas</h4></br>
                 {% for response in topic.responses %}
-                <div class="panel-group" id="accordion">
-                  <div class="panel panel-default">
+                <div class="panel-group" id="accordion3">
+                  <div class="panel panel-primary">
                     <div class="panel-heading">
                       <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}">{{response.title}}</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}" class="collapsed">{{response.title}}</a>
                       </h4>
                     </div>
                     <div id="collapse{{forloop.counter}}" class="panel-collapse collapse">
@@ -55,7 +57,8 @@
                   </div>
                 </div>
                 {% endfor %}
-                <ul class="nav nav-tabs">
+                <h4 class="panel-title">Entidades identificadas</h4></br>
+                <ul class="nav nav-tabs nav-primary">
                   <li class="active"><a data-toggle="tab" href="#locations">Lugares</a></li>
                   <li><a data-toggle="tab" href="#artists">Artistas</a></li>
                   <li><a data-toggle="tab" href="#persons">Personas</a></li>
