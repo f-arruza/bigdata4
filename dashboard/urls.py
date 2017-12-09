@@ -5,7 +5,7 @@ from .views import (
     summary, accounts, hashtags, locations, quotes, polarities, tweets,
     LocationsView, QuotesView, PolaritiesView, organizations, locations_ent,
     musicfans_by_id, persons_spotify, TopicsView, TopicDetailView,
-    search_tweets, search,
+    search_tweets, search, persons_by_dates,
 )
 
 urlpatterns = [
@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^musicfans/$', musicfans, name='musicfans'),
     url(r'^musicfans/(?P<topic_id>\w+)/$', musicfans_by_id, name='musicfans_by_id'),
     url(r'^persons/$', persons, name='persons'),
+    url(r'^persons/search/$', persons_by_dates, name='persons_by_dates'),
     url(r'^persons_spotify/$', persons_spotify, name='persons_spotify'),
     url(r'^organizations/$', organizations, name='organizations'),
     url(r'^locations_ent/$', locations_ent, name='locations_ent'),

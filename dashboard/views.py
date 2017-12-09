@@ -2,6 +2,7 @@
 import json
 import numpy
 import requests
+import datetime
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import HttpResponse
@@ -244,9 +245,38 @@ def persons(request):
     return HttpResponse(json.dumps(result, ensure_ascii=False).encode('utf-8'),
                         content_type="application/json; charset=utf-8")
 
+def persons_by_dates(request):
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    if start_date is not None and end_date is not None:
+        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
+
+        data = db['persons'].find({ '$or': [ {'data.birthdate': { '$exists': 'true'}}, {'data.deathdate': { '$exists': 'true'}} ] })
+        result = []
+        for dto in data:
+            appended = False
+            if 'birthdate' in dto['data']:
+                birthdate = datetime.datetime.strptime(dto['data']['birthdate'], "%Y-%m-%d").date()
+                if birthdate >= start_date and birthdate <= end_date:
+                    appended = True
+            if appended == False and 'deathdate' in dto['data']:
+                deathdate = datetime.datetime.strptime(dto['data']['deathdate'], "%Y-%m-%d").date()
+                if deathdate >= start_date and deathdate <= end_date:
+                    appended = True
+            if appended:
+                result.append({
+                    'topic_id' : str(dto['topic_id']),
+                    'data' : dto['data'],
+                })
+    else:
+        result = 'start_date or end_date parameter not found.'
+    return HttpResponse(json.dumps(result, ensure_ascii=False).encode('utf-8'),
+                        content_type="application/json; charset=utf-8")
+
 def persons_spotify(request):
     topic_id = request.GET.get('topic_id')
-    if (topic_id is not None):
+    if topic_id is not None:
         try:
             data = db['persons_spotify'].find({ 'topic_id' : ObjectId(topic_id) })
             result = []
