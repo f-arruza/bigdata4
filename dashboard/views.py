@@ -427,7 +427,7 @@ def search_tweets(request):
             if q == '':
                 q = condition
             else:
-                q = q + ' or ' + condition
+                q = q + ' OR ' + condition
         if q != '':
             q = '(' + q + ')'
 
@@ -458,12 +458,13 @@ def search(request):
             if q == '':
                 q = condition
             else:
-                q = q + ' or ' + condition
+                q = q + ' OR ' + condition
         if q != '':
             q = '(' + q + ')'
 
     url = 'http://172.24.100.95:8084/solr/musicfans/select?q={}&rows={}&start={}'
     url = url.format(q, limit, start)
+    print(url)
     response = requests.get(url)
     return HttpResponse(json.dumps(response.json()['response']['docs'],
                                    ensure_ascii=False).encode('utf-8'),
