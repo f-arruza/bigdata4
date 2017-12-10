@@ -5,7 +5,7 @@ from .views import (
     summary, accounts, hashtags, locations, quotes, polarities, tweets,
     LocationsView, QuotesView, PolaritiesView, organizations, locations_ent,
     musicfans_by_id, persons_spotify, TopicsView, TopicDetailView,
-    search_tweets, search, persons_by_dates,
+    search_tweets, search, persons_by_dates, PersonSearch
 )
 
 urlpatterns = [
@@ -61,5 +61,10 @@ urlpatterns = [
         r'^detalle-topico/(?P<id>[-_\w]+)/$',
         TopicDetailView.as_view(),
         name='topic-detail-view'
+    ),
+    url(
+        r'^buscar-persona/$',
+        PersonSearch.as_view(),
+        name='person-search-view'
     ),
 ]

@@ -1,0 +1,74 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static "dashboard/lib/timepicker/jquery.timepicker.css" %}">
+{% endblock %}
+
+{% block main %}
+<div class="contentpanel">
+
+  <ol class="breadcrumb breadcrumb-quirk">
+    <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
+    <li class="active">Búsqueda de Personas</li>
+  </ol>
+
+  <div class="panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">Búsqueda de personas por fechas importantes</h4>
+    </div>
+    <div class="panel-body">
+      <hr>
+      <div class="col-sm-4">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="yyyy/mm/dd/" id="start_date">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="yyyy/mm/dd" id="end_date">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <button type="button" id="search" name="button" class="btn btn-primary ml5">Buscar</button>
+      </div>
+      <ul class="media-list user-list" id="persons"></ul>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static "dashboard/lib/timepicker/jquery.timepicker.js" %}"></script>
+<script>
+$(document).ready(function() {
+  'use strict';
+
+  $('#start_date').datepicker({ dateFormat: 'yy-mm-dd' });
+  $('#end_date').datepicker({ dateFormat: 'yy-mm-dd' });
+
+  $("#search").click(function(){
+    $.get('/persons/search/?start_date='+$("#start_date").val()+'&end_date='+$("#end_date").val(), function(data){
+      $("#persons").html('');
+      data.forEach(function(user){
+        var user_profile = "<li class='media col-sm-4'>\
+          <div class='media-body'>\
+          <h4 class='media-heading nomargin'><a target='_blank' href='" + user.data.page + "'>" + user.data.name +"</a></h4>";
+          if(user.data.gender) user_profile += "<p>" + user.data.gender + "</p>";
+          if(user.data.birthplace) user_profile += "Lugar de nacimiento: <span>" + user.data.birthplace +"</span><br/>";
+          if(user.data.birthdate) user_profile += "Fecha de nacimiento: <span>" + user.data.birthdate +"</span><br/>";
+          if(user.data.deathplace) user_profile += "Lugar de muerte: <span>" + user.data.deathplace +"</span><br/>";
+          if(user.data.deathdate) user_profile += "Fecha de muerte: <span>" + user.data.deathdate +"</span><br/>";
+          if(user.data.occupations.length>0) user_profile += "Ocupaciones: <span>" + user.data.occupations +"</span><br/>";
+          if(user.data.genre.length>0) user_profile += "Géneros: <span>" + user.data.genre +"</span><br/>";
+          user_profile += "<a href='/detalle-topico/" + user.topic_id + "'>Ver tópico</a></div></li>";
+        $("#persons").append(user_profile);
+      });
+    });
+  });
+});
+</script>
+{% endblock %}

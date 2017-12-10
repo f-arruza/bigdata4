@@ -469,3 +469,7 @@ def search(request):
     return HttpResponse(json.dumps(response.json()['response']['docs'],
                                    ensure_ascii=False).encode('utf-8'),
                         content_type="application/json; charset=utf-8")
+
+
+class PersonSearch(TemplateView):
+    template_name = 'dashboard/person_search.html'

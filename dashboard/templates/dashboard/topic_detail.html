@@ -94,6 +94,70 @@
   </div>
 </div>
 <input type="hidden" value="{{topic_id}}" id="topic_id">
+
+<div class="modal fade" id="tweets-personas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Tweets Relacionados</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul id="tweets-persons-container"></ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="anterior_personas"><i class="fa fa-angle-left"></i> Anterior</button>
+        <button type="button" class="btn btn-secondary" id="siguiente_personas">Siguiente <i class="fa fa-angle-right"></i></button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="tweets-organizaciones" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Tweets Relacionados</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul id="tweets-organizaciones-container"></ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="anterior_organizaciones"><i class="fa fa-angle-left"></i> Anterior</button>
+        <button type="button" class="btn btn-secondary" id="siguiente_organizaciones">Siguiente <i class="fa fa-angle-right"></i></button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="tweets-artistas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Tweets Relacionados</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul id="tweets-artistas-container"></ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="anterior_artistas"><i class="fa fa-angle-left"></i> Anterior</button>
+        <button type="button" class="btn btn-secondary" id="siguiente_artistas">Siguiente <i class="fa fa-angle-right"></i></button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 
 {% block js %}
@@ -105,12 +169,120 @@
 $(document).ready(function() {
   'use strict';
 
+  //personas
+  var start_persons = 0;
+  var id_person = "";
+
+  var cargar_tweets_personas = function(){
+    $.get('/tweets/search/?query=' + id_person + '&start=' + start_persons + '&limit=10', function(data){
+      $("#tweets-persons-container").html('');
+      data.forEach(function(tweet){
+        var tweet_content = "<li class='media col-sm-6' style='height: 150px;'>\
+          <div class='media-body'>\
+            <h4 class='media-heading nomargin'><a target='_blank' href='https://twitter.com/" + tweet.account[0] + "/status/" + tweet.ref_id[0] + "'>" + tweet.account[0] +"</a></h4>\
+            <p>" + tweet.payload[0] + "</p>\
+          </div>\
+        </li>";
+        $("#tweets-persons-container").append(tweet_content);
+      });
+
+      $('#tweets-personas').modal();
+    });
+  }
+
+  $("#anterior_personas").on('click', function(){
+    if(start_persons!=0){
+      start_persons -= 10;
+      cargar_tweets_personas();
+    }
+  });
+  $("#siguiente_personas").on('click', function(){
+    start_persons += 10;
+    cargar_tweets_personas();
+  });
+
+  //organizaciones
+  var start_organizaciones = 0;
+  var id_organizacion = "";
+
+  var cargar_tweets_organizaciones = function(){
+    $.get('/tweets/search/?query=' + id_organizacion + '&start=' + start_organizaciones + '&limit=10', function(data){
+      $("#tweets-organizaciones-container").html('');
+      data.forEach(function(tweet){
+        var tweet_content = "<li class='media col-sm-6' style='height: 150px;'>\
+          <div class='media-body'>\
+            <h4 class='media-heading nomargin'><a target='_blank' href='https://twitter.com/" + tweet.account[0] + "/status/" + tweet.ref_id[0] + "'>" + tweet.account[0] +"</a></h4>\
+            <p>" + tweet.payload[0] + "</p>\
+          </div>\
+        </li>";
+        $("#tweets-organizaciones-container").append(tweet_content);
+      });
+
+      $('#tweets-organizaciones').modal();
+    });
+  }
+
+  $("#anterior_organizaciones").on('click', function(){
+    if(start_organizations!=0){
+      start_organizaciones -= 10;
+      cargar_tweets_organizaciones();
+    }
+  });
+  $("#siguiente_organizaciones").on('click', function(){
+    start_organizaciones += 10;
+    cargar_tweets_organizaciones();
+  });
+
+  //artistas
+  var start_artistas = 0;
+  var id_artista = "";
+
+  var cargar_tweets_artistas = function(){    
+    $.get('/tweets/search/?query=' + id_artista + '&start=' + start_artistas + '&limit=10', function(data){
+      $("#tweets-artistas-container").html('');
+      data.forEach(function(tweet){
+        var tweet_content = "<li class='media col-sm-6' style='height: 150px;'>\
+          <div class='media-body'>\
+            <h4 class='media-heading nomargin'><a target='_blank' href='https://twitter.com/" + tweet.account[0] + "/status/" + tweet.ref_id[0] + "'>" + tweet.account[0] +"</a></h4>\
+            <p>" + tweet.payload[0] + "</p>\
+          </div>\
+        </li>";
+        $("#tweets-artistas-container").append(tweet_content);
+      });
+
+      $('#tweets-artistas').modal();
+    });
+  }
+
+  $("#anterior_artistas").on('click', function(){
+    if(start_artistas!=0){
+      start_artistas -= 10;
+      cargar_tweets_artistas();
+    }
+  });
+  $("#siguiente_artistas").on('click', function(){
+    start_artistas += 10;
+    cargar_tweets_artistas();
+  });
+
   var map = L.map('mapid').setView([4.5048522, -75.8060487 ], 3);
 
   var mapbox = L.tileLayer('https://api.mapbox.com/styles/v1/josedeweb/cj9a1i07g2z8m2smvx2ttqcml/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoiam9zZWRld2ViIiwiYSI6ImxKbzA2OUkifQ.pd8n2FOQbRduWCgc02gSWQ', {
       attribution: 'Taller 4 - Bigdata &copy Uniandes',
       maxZoom: 18
   }).addTo(map);
+
+  $.get('/locations_ent?topic_id='+$("#topic_id").val(), function(data){
+    data.forEach(function(location){
+      // var latlngs = [[37, -109.05],[41, -109.03],[41, -102.05],[37, -102.04]];
+      var latlngs = [];
+      location.data.coordinates.forEach(function(coords){
+        latlngs.push([parseInt(coords.lon), parseInt(coords.lat)]);
+      });
+      var polygon = L.polygon(latlngs).addTo(map);
+      map.fitBounds(polygon.getBounds());
+    });
+  });
 
   $('#dataTable1').DataTable({"order": [[ 1, "desc" ]]});
 
@@ -119,18 +291,24 @@ $(document).ready(function() {
     data.forEach(function(user){
       var person_profile = "<li class='media col-sm-4'>\
         <div class='media-body'>\
-          <h4 class='media-heading nomargin'><a target='_blank' href='" + user.data.page + "'>" + user.data.name +"</a></h4>\
-          Sexo: <span>" + user.data.gender + "</span><br>\
-          Fuente: <span>" + user.source +"</span><br>\
-          Ocupaciones: <span>" + user.data.occupations + "</span><br>\
-          Géneros: <span>" + user.data.genre + "</span><br>\
-          Lugar de nacimiento: <span>" + user.data.birthplace + "</span><br>\
-          Fecha de nacimiento: <span>" + user.data.birthdate + "</span><br>\
-          Lugar de muerte: <span>" + user.data.deathplace + "</span><br>\
-          Fecha de muerte: <span>" + user.data.deathdate + "</span><br>\
-        </div>\
-      </li>";
+          <h4 class='media-heading nomargin'><a target='_blank' href='" + user.data.page + "'>" + user.data.name +"</a></h4>";
+          if(user.data.gender) person_profile += "Sexo: <span>" + user.data.gender + "</span><br>";
+          if(user.source) person_profile += "Fuente: <span>" + user.source +"</span><br>";
+          if(user.data.occupations.length>0) person_profile += "Ocupaciones: <span>" + user.data.occupations + "</span><br>";
+          if(user.data.genre.length>0) person_profile += "Géneros: <span>" + user.data.genre + "</span><br>";
+          if(user.data.birthplace) person_profile += "Lugar de nacimiento: <span>" + user.data.birthplace + "</span><br>";
+          if(user.data.birthdate) person_profile += "Fecha de nacimiento: <span>" + user.data.birthdate + "</span><br>";
+          if(user.data.deathplace) person_profile += "Lugar de muerte: <span>" + user.data.deathplace + "</span><br>";
+          if(user.data.deathdate) person_profile += "Fecha de muerte: <span>" + user.data.deathdate + "</span><br>";
+        person_profile += "<button id='" + user.data.name.split(' ').join('+') + "' type='button' class='btn btn-primary btn-tweets-personas' data-toggle='modal'>Ver Tweets</button></div></li>";
+
       $("#persons_container").append(person_profile);
+    });
+
+    $('.btn-tweets-personas').click(function(){
+      id_person = $(this).attr('id');
+      start_persons = 0;
+      cargar_tweets_personas();
     });
   });
 
@@ -139,23 +317,29 @@ $(document).ready(function() {
     data.forEach(function(organization){
       var organization_profile = "<li class='media col-sm-12'>\
         <div class='media-body'>\
-          <h4 class='media-heading nomargin'><a target='_blank' href='" + organization.data.page + "'>" + organization.data.name + " - " +organization.data.fullname +"</a></h4>\
-          Tipo: <span>" + organization.data.type + "</span><br>\
-          País: <span>" + organization.data.country +"</span><br>\
-          Abstract: <span>" + organization.data.abstract + "</span><br>\
-          Servicios: <span>" + organization.data.services + "</span><br>\
-          Lugares: <span>" + organization.data.places + "</span><br>\
-          Personas: <span>" + organization.data.persons + "</span><br>\
-        </div>\
-      </li>";
+          <h4 class='media-heading nomargin'><a target='_blank' href='" + organization.data.page + "'>" + organization.data.name + " - " +organization.data.fullname +"</a></h4>";
+          if(organization.data.type) organization_profile += "Tipo: <span>" + organization.data.type + "</span><br>";
+          if(organization.data.country) organization_profile += "País: <span>" + organization.data.country + "</span><br>";
+          if(organization.data.abstract) organization_profile += "Abstract: <span>" + organization.data.abstract + "</span><br>";
+          if(organization.data.services) organization_profile += "Servicios: <span>" + organization.data.services + "</span><br>";
+          if(organization.data.places) organization_profile += "Lugares: <span>" + organization.data.places + "</span><br>";
+          if(organization.data.persons) organization_profile += "Personas: <span>" + organization.data.persons + "</span><br>";
+          organization_profile += "<button id='" + organization.data.name.split(' ').join('+') + "' type='button' class='btn btn-primary btn-tweets-organizaciones' data-toggle='modal'>Ver Tweets</button></div></li>";
+        organization_profile += "</div></li>";
       $("#organizations_container").append(organization_profile);
+
+      $('.btn-tweets-organizaciones').click(function(){
+        id_organizacion = $(this).attr('id');
+        start_organizaciones = 0;
+        cargar_tweets_organizaciones();
+      });
     });
   });
 
   $.get('/persons_spotify?topic_id='+$("#topic_id").val(), function(data){
     $("#artists_container").html('');
     data.forEach(function(artist){
-      var artist = "<li class='media col-sm-12'>\
+      var artist_profile = "<li class='media col-sm-12'>\
       <div class='media-left'>\
         <a href='#'>\
           <img class='media-object img-circle' src='" + artist.images[0] + "' alt=''>\
@@ -163,20 +347,24 @@ $(document).ready(function() {
       </div>\
         <div class='media-body'>\
           <h4 class='media-heading nomargin'><a target='_blank' href='" + artist.url + "'>" + artist.name +"</a></h4>\
-          \
           Seguidores: <span>" + artist.followers + "</span><br>\
           Popularidad: <span>" + artist.popularity + "</span><br>\
-          Géneros: <span>" + artist.genres + "</span><br>\
-        </div>\
-      </li>";
-      $("#artists_container").append(artist);
-      
+          Géneros: <span>" + artist.genres + "</span><br>";
+      artist.albums.forEach(function(album){
+        artist_profile += "<a class='album' href="+album.url+" target='_blank'><img class='media-object img-circle' src='" + album.images[0].url + "' alt=''>";
+        artist_profile += "<span>" + album.name + "</span></a>";
+      });
+      artist_profile += "<br/><button id='" + artist.name.split(' ').join('+') + "' type='button' class='btn btn-primary btn-tweets-artistas' data-toggle='modal'>Ver Tweets</button></div></li>";
+      artist_profile += "</div></li>";
+      $("#artists_container").append(artist_profile);
+
+      $('.btn-tweets-artistas').click(function(){
+        id_artista = $(this).attr('id');
+        start_artistas = 0;
+        cargar_tweets_artistas();
+      });
     });
   });
-
-    // $.get('/locations?topic_id='+$("#topic_id").val(), function(data){
-    //
-    // });
 });
 </script>
 {% endblock %}
