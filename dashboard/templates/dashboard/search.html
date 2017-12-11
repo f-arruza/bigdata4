@@ -1,0 +1,83 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block main %}
+<div class="contentpanel">
+
+  <ol class="breadcrumb breadcrumb-quirk">
+    <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
+    <li class="active">Búsqueda de Personas</li>
+  </ol>
+
+  <div class="panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">Búsqueda de personas por fechas importantes</h4>
+    </div>
+    <div class="panel-body">
+      <hr>
+      <div class="col-sm-12">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Buscar Palabra" id="search">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+        </div>
+      </div>
+      <ul class="media-list user-list" id="results"></ul>
+    </div>
+    <hr>
+    <ul class="pager">
+      <li><a href="#" id="anterior"><i class="fa fa-angle-left"></i> Anterior</a></li>
+      <li><a href="#" id="siguiente">Siguiente <i class="fa fa-angle-right"></i></a></li>
+    </ul>
+    <hr>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+  'use strict';
+  var query = "";
+  var page = 0;
+
+  var load = function(){
+    $.get('/search/?query=' + query + '&offset=' + page*16 + "&limit=16", function(data){
+      $("#results").html("");
+      data.forEach(function(result){
+        var result_profile = "<li class='media col-sm-4'>\
+          <div class='media-body'>\
+            <h4 class='media-heading nomargin'>" + result.account[0] +"</a></h4>";
+            if(result.payload.length>0) result_profile += "<p>" + result.payload[0] + "</p>";
+            if(result.polarity.length>0) result_profile += "Polaridad: <span>" + result.polarity[0] + "</span><br>";            
+          result_profile += "</div></li>";
+        $("#results").append(result_profile);
+      });
+    });
+  }
+
+  $("#search").keyup(function(){
+    query = $(this).val();
+    if(query.length>4){
+      page = 1;
+      load();
+    }
+  });
+
+  $("#anterior").on('click', function(){
+    if(page!=0){
+      page -= 1;
+      load();
+    }
+  });
+  $("#siguiente").on('click', function(){
+    page += 1;
+    load();
+  });
+});
+</script>
+{% endblock %}

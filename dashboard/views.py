@@ -49,7 +49,6 @@ def accounts(request):
 
     if (limit is not None and offset is not None):
         data = db['accounts'].find({}).skip(int(offset)).limit(int(limit)).sort([('tweets_count', -1)])
-        # print(data)
         result = []
         for dto in data:
             json_data = {
@@ -74,7 +73,6 @@ def hashtags(request):
 
     if (limit is not None and offset is not None):
         data = db['hashtags'].find({}).skip(int(offset)).limit(int(limit)).sort('count', -1)
-        # print(data)
         result = []
         for dto in data:
             json_data = {
@@ -93,7 +91,6 @@ def locations(request):
 
     if (limit is not None and offset is not None):
         data = db['locations'].find({}).skip(int(offset)).limit(int(limit)).sort('count', -1)
-        # print(data)
         result = []
         for dto in data:
             json_data = {
@@ -111,8 +108,7 @@ def quotes(request):
     offset = request.GET.get('offset')
 
     if (limit is not None and offset is not None):
-        data = db['quotes'].find({}).skip(int(offset)).limit(int(limit)).sort('count', -1)
-        # print(data)
+        data = db['quotes'].find({}).skip(int(offset)).limit(int(limit)).sort('count', -1)        
         result = []
         for dto in data:
             json_data = {
@@ -126,8 +122,7 @@ def quotes(request):
                         content_type="application/json; charset=utf-8")
 
 def polarities(request):
-    data = db['polarities'].find({}).sort('polarity_id', 1)
-    # print(data)
+    data = db['polarities'].find({}).sort('polarity_id', 1)    
     result = []
     for dto in data:
         json_data = {
@@ -421,7 +416,6 @@ def search_tweets(request):
     else:
         q = ''
         qparams = query.split(' ')
-        print(qparams)
         for param in qparams:
             condition = 'payload:*' + param + '*'
             if q == '':
@@ -452,7 +446,6 @@ def search(request):
     else:
         q = ''
         qparams = query.split(' ')
-        print(qparams)
         for param in qparams:
             condition = 'payload:*' + param + '*'
             if q == '':
@@ -464,7 +457,6 @@ def search(request):
 
     url = 'http://172.24.100.95:8084/solr/musicfans/select?q={}&rows={}&start={}'
     url = url.format(q, limit, start)
-    print(url)
     response = requests.get(url)
     return HttpResponse(json.dumps(response.json()['response']['docs'],
                                    ensure_ascii=False).encode('utf-8'),
@@ -473,3 +465,7 @@ def search(request):
 
 class PersonSearch(TemplateView):
     template_name = 'dashboard/person_search.html'
+
+
+class SearchView(TemplateView):
+    template_name = 'dashboard/search.html'
