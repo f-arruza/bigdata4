@@ -298,7 +298,7 @@ $(document).ready(function() {
           if(user.data.birthdate) person_profile += "Fecha de nacimiento: <span>" + user.data.birthdate + "</span><br>";
           if(user.data.deathplace) person_profile += "Lugar de muerte: <span>" + user.data.deathplace + "</span><br>";
           if(user.data.deathdate) person_profile += "Fecha de muerte: <span>" + user.data.deathdate + "</span><br>";
-        person_profile += "<button id='" + user.data.name.split(' ').join('+') + "' type='button' class='btn btn-primary btn-tweets-personas' data-toggle='modal'>Ver Tweets</button></div></li>";
+        person_profile += "<br><button id='" + user.data.name.split(' ').join('+') + "' type='button' class='btn btn-primary btn-tweets-personas' data-toggle='modal'>Ver Tweets</button></div></li>";
 
       $("#persons_container").append(person_profile);
     });
@@ -322,7 +322,8 @@ $(document).ready(function() {
           if(organization.data.services) organization_profile += "Servicios: <span>" + organization.data.services + "</span><br>";
           if(organization.data.places) organization_profile += "Lugares: <span>" + organization.data.places + "</span><br>";
           if(organization.data.persons) organization_profile += "Personas: <span>" + organization.data.persons + "</span><br>";
-          organization_profile += "<button id='" + organization.data.name.split(' ').join('+') + "' type='button' class='btn btn-primary btn-tweets-organizaciones' data-toggle='modal'>Ver Tweets</button></div></li>";
+          if(organization.data.persons) organization_profile += "Personas: <span>" + organization.data.persons + "</span><br>";
+          organization_profile += "<br><button id='" + organization.data.name.split(' ').join('+') + "' type='button' class='btn btn-primary btn-tweets-organizaciones' data-toggle='modal'>Ver Tweets</button></div></li>";
         organization_profile += "</div></li>";
       $("#organizations_container").append(organization_profile);
 
@@ -347,12 +348,12 @@ $(document).ready(function() {
           <h4 class='media-heading nomargin'><a target='_blank' href='" + artist.url + "'>" + artist.name +"</a></h4>\
           Seguidores: <span>" + artist.followers + "</span><br>\
           Popularidad: <span>" + artist.popularity + "</span><br>\
-          Géneros: <span>" + artist.genres + "</span><br>";
+          Géneros: <span>" + artist.genres + "</span><br><h4>Albumes:</h4>";
       artist.albums.forEach(function(album){
         artist_profile += "<a class='album' href="+album.url+" target='_blank'><img class='media-object img-circle' src='" + album.images[0].url + "' alt=''>";
         artist_profile += "<span>" + album.name + "</span></a>";
       });
-      artist_profile += "<br/><button id='" + artist.name.split(' ').join('+') + "' type='button' class='btn btn-primary btn-tweets-artistas' data-toggle='modal'>Ver Tweets</button></div></li>";
+      artist_profile += "<br/><br/><button id='" + artist.name.split(' ').join('+') + "' type='button' class='btn btn-primary btn-tweets-artistas' data-toggle='modal'>Ver Tweets</button></div></li>";
       artist_profile += "</div></li>";
       $("#artists_container").append(artist_profile);
 

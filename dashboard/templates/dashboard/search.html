@@ -10,12 +10,12 @@
 
   <ol class="breadcrumb breadcrumb-quirk">
     <li><a href="{% url 'index'%}"><i class="fa fa-home mr5"></i> Dashboard</a></li>
-    <li class="active">Búsqueda de Personas</li>
+    <li class="active">Búsqueda Avanzada</li>
   </ol>
 
   <div class="panel">
     <div class="panel-heading">
-      <h4 class="panel-title">Búsqueda de personas por fechas importantes</h4>
+      <h4 class="panel-title">Búsqueda Avanzada</h4>
     </div>
     <div class="panel-body">
       <hr>
@@ -53,7 +53,7 @@ $(document).ready(function() {
           <div class='media-body'>\
             <h4 class='media-heading nomargin'>" + result.account[0] +"</a></h4>";
             if(result.payload.length>0) result_profile += "<p>" + result.payload[0] + "</p>";
-            if(result.polarity.length>0) result_profile += "Polaridad: <span>" + result.polarity[0] + "</span><br>";            
+            if(result.polarity.length>0) result_profile += "Polaridad: <span>" + result.polarity[0] + "</span><br>";
           result_profile += "</div></li>";
         $("#results").append(result_profile);
       });
