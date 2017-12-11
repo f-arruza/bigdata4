@@ -237,7 +237,7 @@ $(document).ready(function() {
   var start_artistas = 0;
   var id_artista = "";
 
-  var cargar_tweets_artistas = function(){    
+  var cargar_tweets_artistas = function(){
     $.get('/tweets/search/?query=' + id_artista + '&start=' + start_artistas + '&limit=10', function(data){
       $("#tweets-artistas-container").html('');
       data.forEach(function(tweet){
@@ -273,14 +273,12 @@ $(document).ready(function() {
   }).addTo(map);
 
   $.get('/locations_ent?topic_id='+$("#topic_id").val(), function(data){
-    data.forEach(function(location){
-      // var latlngs = [[37, -109.05],[41, -109.03],[41, -102.05],[37, -102.04]];
-      var latlngs = [];
+    data.forEach(function(location){    
       location.data.coordinates.forEach(function(coords){
-        latlngs.push([parseInt(coords.lon), parseInt(coords.lat)]);
+        L.marker([parseInt(coords.lon), parseInt(coords.lat)]).addTo(map)
+        .bindPopup(location.data.name)
+        .openPopup();
       });
-      var polygon = L.polygon(latlngs).addTo(map);
-      map.fitBounds(polygon.getBounds());
     });
   });
 
